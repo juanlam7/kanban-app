@@ -1,9 +1,11 @@
+import Sidebar from "@/components/ui/Sidebar";
+import BoardTasks from "@/components/ui/BoardTasks";
+
 export default function Home() {
   return (
-    <main>
-      <section className="h-screen flex items-center justify-center">
-        <p>Welcome</p>
-      </section>
+    <main className="flex h-full">
+      <Sidebar />
+      <BoardTasks />
     </main>
   );
 }
