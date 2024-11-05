@@ -8,7 +8,7 @@ interface LoginResponse {
     id: string;
     name: string;
     username: string;
-    // email: string;
+    email: string;
   };
 }
 
@@ -18,6 +18,10 @@ const mutation = `
     mutation Login($username: String!, $password: String!) {
       login(username: $username, password: $password) {
         value
+        id
+        name
+        username
+        email
       }
     }
 `;
@@ -44,9 +48,10 @@ export const options: NextAuthOptions = {
 
           if (data) {
             return {
-              id: data.login.id ?? "testId", // make login return id
-              name: data.login.name ?? "name", // make login return name
-              username: data.login.username ?? "username", // make login return username
+              id: data.login.id,
+              name: data.login.name,
+              username: data.login.username,
+              email: data.login.email,
               token: data.login.value,
             };
           }
