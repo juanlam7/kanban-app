@@ -64,4 +64,4 @@ export const fireStoreApi = createApi({
   }),
 });
 
-export const { useFetchDataFromDbQuery } = fireStoreApi;
+export const { useFetchDataFromDbQuery, useUpdateBoardToDbMutation } = fireStoreApi;

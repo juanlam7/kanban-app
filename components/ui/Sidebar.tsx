@@ -3,7 +3,10 @@
 import { useState } from "react";
 import { useAppDispatch } from "@/redux/hooks";
 import { useFetchDataFromDbQuery } from "@/redux/services/apiSlice";
-import { setCurrentBoardName } from "@/redux/features/appSlice";
+import {
+  openAddAndEditBoardModal,
+  setCurrentBoardName,
+} from "@/redux/features/appSlice";
 import { Button } from "./button";
 import { Board } from "@/lib/types";
 
@@ -45,6 +48,7 @@ export default function Sidebar() {
         </>
       )}
       <Button
+        onClick={() => dispatch(openAddAndEditBoardModal("Add New Board"))}
         variant="ghost"
         className="flex items-center space-x-2 ml-[2.12rem] py-3"
       >

@@ -5,8 +5,9 @@ import { useFetchDataFromDbQuery } from "@/redux/services/apiSlice";
 import { useEffect, useState } from "react";
 import {
   getCurrentBoardName,
+  openAddAndEditTaskModal,
   setCurrentBoardName,
-} from "../../redux/features/appSlice";
+} from "@/redux/features/appSlice";
 import { Button } from "./button";
 import Dropdown from "./Dropdown";
 
@@ -20,6 +21,7 @@ export default function Navbar() {
       const activeBoard = data[0].boards[0];
       dispatch(setCurrentBoardName(activeBoard.name));
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data]);
 
   const currentBoardName = useAppSelector(getCurrentBoardName);
@@ -34,7 +36,12 @@ export default function Navbar() {
         <p className="text-black text-2xl font-bold pl-6">{currentBoardName}</p>
 
         <div className="flex items-center space-x-3">
-          <Button className="px-4 py-2 flex items-center">
+          <Button
+            onClick={() =>
+              dispatch(openAddAndEditTaskModal({ variant: "Add New Task" }))
+            }
+            className="px-4 py-2 flex items-center"
+          >
             <p>+ Add New Task</p>
           </Button>
           <div className="relative flex items-center">
