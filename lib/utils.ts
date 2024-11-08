@@ -15,29 +15,41 @@ export const data = {
       columns: [
         {
           id: id(),
-          name: "Now",
+          name: "backlog",
           tasks: [
             {
               id: id(),
               title: "Launch version one",
-              status: "Now",
+              status: "backlog",
             },
             {
               id: id(),
               title: "Review early feedback and plan next steps for roadmap",
-              status: "Now",
+              status: "backlog",
             },
           ],
         },
         {
           id: id(),
-          name: "Next",
-          tasks: [],
+          name: "in progress",
+          tasks: [
+            {
+              id: id(),
+              title: "Review early feedback and plan next steps for roadmap",
+              status: "in progress",
+            },
+          ],
         },
         {
           id: id(),
-          name: "Later",
-          tasks: [],
+          name: "done",
+          tasks: [
+            {
+              id: id(),
+              title: "Review early feedback and plan next steps for roadmap",
+              status: "done",
+            },
+          ],
         },
       ],
     },

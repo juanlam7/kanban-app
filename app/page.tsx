@@ -1,6 +1,6 @@
+import BoardSectionList from "@/components/board/BoardSectionList";
 import AddAndEditBoardModal from "@/components/ui/AddAndEditBoardModal";
 import AddOrEditTaskModal from "@/components/ui/AddAndEditTaskModal";
-import BoardTasks from "@/components/ui/BoardTasks";
 import DeleteBoardOrTaskModal from "@/components/ui/DeleteBoardAndTask";
 import Navbar from "@/components/ui/Navbar";
 import Sidebar from "@/components/ui/Sidebar";
@@ -16,7 +16,7 @@ export default async function Home() {
       </div>
       <div className="relative w-full flex mt-24">
         <Sidebar />
-        <BoardTasks />
+        <BoardSectionList />
       </div>
       <AddAndEditBoardModal />
       <AddOrEditTaskModal />

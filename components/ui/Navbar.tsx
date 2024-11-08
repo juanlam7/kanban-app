@@ -18,10 +18,16 @@ export default function Navbar() {
 
   useEffect(() => {
     if (data) {
-      const activeBoard = data[0].boards[0];
-      dispatch(setCurrentBoardName(activeBoard.name));
+      const activeBoardData = data[0].boards.find(
+        (board: { name: string }) => board.name === currentBoardName
+      );
+      if (activeBoardData) {
+        dispatch(setCurrentBoardName(activeBoardData.name));
+      } else {
+        dispatch(setCurrentBoardName(data[0].boards[0].name));
+      }
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data]);
 
   const currentBoardName = useAppSelector(getCurrentBoardName);
