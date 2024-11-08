@@ -1,7 +1,7 @@
 import { addDoc, collection, getDocs } from "firebase/firestore";
 import { getServerSession } from "next-auth";
 import { db } from "./firebaseConfig";
-import { data } from "./utils";
+import { data } from "./fakeData";
 
 // TODO: Move firebase request to a repository folder where all endpoint calls will be handled no matter if there are API Rest or Firebase request
 

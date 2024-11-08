@@ -4,9 +4,9 @@ import {
   SortableContext,
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
-import { Task } from "./types";
 import TaskItem from "./TaskItem";
 import SortableTaskItem from "./SortableTaskItem";
+import { Task } from "@/lib/types";
 
 type BoardSectionProps = {
   id: string;
@@ -29,13 +29,11 @@ const BoardSection = ({ id, title, tasks }: BoardSectionProps) => {
         items={tasks}
         strategy={verticalListSortingStrategy}
       >
-        <div ref={setNodeRef}>
+        <div className="h-full" ref={setNodeRef}>
           {tasks.map((task, index: number) => (
             <div key={task.id} className="mb-4">
               <SortableTaskItem id={task.id}>
-                {task.title.length === 0 ? (
-                  <div className="mt-6 h-full rounded-md border-dashed border-4 border-white" />
-                ) : (
+                {task.title.length === 0 ? null : (
                   <TaskItem task={task} index={index} />
                 )}
               </SortableTaskItem>

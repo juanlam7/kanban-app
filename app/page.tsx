@@ -1,4 +1,4 @@
-import BoardSectionList from "@/components/board/BoardSectionList";
+import WrapperBoard from "@/components/board/WrapperBoard";
 import AddAndEditBoardModal from "@/components/ui/AddAndEditBoardModal";
 import AddOrEditTaskModal from "@/components/ui/AddAndEditTaskModal";
 import DeleteBoardOrTaskModal from "@/components/ui/DeleteBoardAndTask";
@@ -16,7 +16,7 @@ export default async function Home() {
       </div>
       <div className="relative w-full flex mt-24">
         <Sidebar />
-        <BoardSectionList />
+        <WrapperBoard />
       </div>
       <AddAndEditBoardModal />
       <AddOrEditTaskModal />

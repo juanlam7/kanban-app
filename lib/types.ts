@@ -21,3 +21,7 @@ export interface Task {
   id: string
   status: string
 }
+
+export type BoardSections = {
+  [name: string]: Task[];
+};

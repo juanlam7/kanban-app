@@ -1,10 +1,10 @@
-import { MdDelete, MdEdit } from "react-icons/md";
-import { Task } from "./types";
+import { Task } from "@/lib/types";
 import {
   openAddAndEditTaskModal,
   openDeleteBoardAndTaskModal,
 } from "@/redux/features/appSlice";
 import { useAppDispatch } from "@/redux/hooks";
+import { MdDelete, MdEdit } from "react-icons/md";
 
 type TaskItemProps = {
   task: Task;

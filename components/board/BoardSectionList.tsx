@@ -1,5 +1,4 @@
-"use client";
-
+import { BoardSections as BoardSectionsType, Task } from "@/lib/types";
 import {
   DndContext,
   DragEndEvent,
@@ -18,75 +17,21 @@ import { arrayMove, sortableKeyboardCoordinates } from "@dnd-kit/sortable";
 import { useEffect, useState } from "react";
 import BoardSection from "./BoardSection";
 import TaskItem from "./TaskItem";
-import { BoardSections as BoardSectionsType, Task } from "./types";
 import {
   findBoardSectionContainer,
   getTaskById,
   initializeBoard,
-} from "./utils";
-import { useFetchDataFromDbQuery } from "@/redux/services/apiSlice";
-import { Board } from "@/lib/types";
-import { id } from "./data";
-import { useAppSelector } from "@/redux/hooks";
-import { getCurrentBoardName } from "@/redux/features/appSlice";
+} from "@/lib/utils";
 
-type BoardSectionListProps = {
+interface BoardSectionListProps {
   initial_tasks: Task[];
-};
-
-function extractTasks(data: Board) {
-  return data.columns.flatMap((column) => {
-    const extractedTasks = column.tasks.map((task) => ({
-      id: task.id,
-      title: task.title || "",
-      status: task.status || column.name,
-    }));
-
-    if (extractedTasks.length === 0) {
-      return [
-        {
-          id: id(),
-          title: "",
-          status: column.name,
-        },
-      ];
-    }
-
-    return extractedTasks;
-  });
+  AddColumn: () => void;
 }
 
-const WrapperBoard = () => {
-  const { data, isLoading } = useFetchDataFromDbQuery();
-  const currentBoardTitle = useAppSelector(getCurrentBoardName);
-  const [initTasks, setInitTasks] = useState<Task[]>([]);
-
-  useEffect(() => {
-    if (data) {
-      const activeBoardData = data[0]?.boards.find(
-        (board) => board.name === currentBoardTitle
-      );
-      if (activeBoardData) {
-        setInitTasks(extractTasks(activeBoardData));
-      }
-    }
-  }, [data, currentBoardTitle]);
-
-  if (isLoading) {
-    return (
-      <p className="text-3xl w-full text-center font-bold">Loading tasks...</p>
-    );
-  }
-
-  if (initTasks.length > 0) {
-    return (
-      <BoardSectionList initial_tasks={initTasks} key={currentBoardTitle} />
-    );
-  }
-  return;
-};
-
-const BoardSectionList = ({ initial_tasks }: BoardSectionListProps) => {
+const BoardSectionList = ({
+  initial_tasks,
+  AddColumn,
+}: BoardSectionListProps) => {
   const [boardSections, setBoardSections] = useState<BoardSectionsType>({});
   const [activeTaskId, setActiveTaskId] = useState<null | string>(null);
 
@@ -198,31 +143,37 @@ const BoardSectionList = ({ initial_tasks }: BoardSectionListProps) => {
   const task = activeTaskId ? getTaskById(initial_tasks, activeTaskId) : null;
 
   return (
-    <div className="overflow-x-auto overflow-y-auto w-full p-6 bg-stone-200">
-      <DndContext
-        sensors={sensors}
-        collisionDetection={closestCorners}
-        onDragStart={handleDragStart}
-        onDragOver={handleDragOver}
-        onDragEnd={handleDragEnd}
-      >
-        <div className="flex">
-          {Object.keys(boardSections).map((boardSectionKey) => (
-            <div key={boardSectionKey} className="mr-5">
-              <BoardSection
-                id={boardSectionKey}
-                title={boardSectionKey}
-                tasks={boardSections[boardSectionKey]}
-              />
-            </div>
-          ))}
-          <DragOverlay dropAnimation={dropAnimation}>
-            {task ? <TaskItem task={task} /> : null}
-          </DragOverlay>
-        </div>
-      </DndContext>
-    </div>
+    <DndContext
+      sensors={sensors}
+      collisionDetection={closestCorners}
+      onDragStart={handleDragStart}
+      onDragOver={handleDragOver}
+      onDragEnd={handleDragEnd}
+    >
+      <div className="flex">
+        {Object.keys(boardSections).map((boardSectionKey) => (
+          <div key={boardSectionKey} className="flex mr-5">
+            <BoardSection
+              id={boardSectionKey}
+              title={boardSectionKey}
+              tasks={boardSections[boardSectionKey]}
+            />
+          </div>
+        ))}
+        {Object.keys(boardSections).length < 7 && (
+          <div
+            onClick={AddColumn}
+            className="rounded-md bg-white w-[17.5rem] mt-12 shrink-0 flex justify-center items-center cursor-pointer"
+          >
+            <p className="font-bold text-black text-2xl">+ New Column</p>
+          </div>
+        )}
+        <DragOverlay dropAnimation={dropAnimation}>
+          {task ? <TaskItem task={task} /> : null}
+        </DragOverlay>
+      </div>
+    </DndContext>
   );
 };
 
-export default WrapperBoard;
+export default BoardSectionList;
