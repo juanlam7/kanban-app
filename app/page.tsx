@@ -1,7 +1,7 @@
 import WrapperBoard from "@/components/board/WrapperBoard";
-import AddAndEditBoardModal from "@/components/ui/AddAndEditBoardModal";
-import AddOrEditTaskModal from "@/components/ui/AddAndEditTaskModal";
-import DeleteBoardOrTaskModal from "@/components/ui/DeleteBoardAndTask";
+import AddAndEditBoardModal from "@/components/modals/AddAndEditBoardModal";
+import AddOrEditTaskModal from "@/components/modals/AddAndEditTaskModal";
+import DeleteBoardOrTaskModal from "@/components/modals/DeleteBoardAndTask";
 import Navbar from "@/components/ui/Navbar";
 import Sidebar from "@/components/ui/Sidebar";
 import { createInitialData } from "@/lib/dataRequests";

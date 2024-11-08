@@ -22,7 +22,9 @@ const BoardSection = ({ id, title, tasks }: BoardSectionProps) => {
   return (
     <div className="w-[17.5rem] shrink-0">
       <h3 className="text-lg font-semibold mb-4">
-        {`${title} (${tasks?.length || 0})`}
+        {`${title} (${
+          tasks.some((item) => item.title.length === 0) ? 0 : tasks?.length || 0
+        })`}
       </h3>
       <SortableContext
         id={id}

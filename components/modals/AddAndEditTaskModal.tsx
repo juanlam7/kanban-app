@@ -1,23 +1,23 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { Modal, ModalBody } from "./Modal";
-import { useAppDispatch, useAppSelector } from "@/redux/hooks";
+import { Board, Column, Task } from "@/lib/types";
+import { id } from "@/lib/utils";
 import {
-  getAddAndEditTaskModalValue,
-  getAddAndEditTaskModalVariantValue,
-  getAddAndEditTaskModalTitle,
   closeAddAndEditTaskModal,
-  getCurrentBoardName,
   getAddAndEditTaskModalIndex,
   getAddAndEditTaskModalName,
+  getAddAndEditTaskModalTitle,
+  getAddAndEditTaskModalValue,
+  getAddAndEditTaskModalVariantValue,
+  getCurrentBoardName,
 } from "@/redux/features/appSlice";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import {
   useFetchDataFromDbQuery,
   useUpdateBoardToDbMutation,
 } from "@/redux/services/apiSlice";
-import { id } from "@/lib/utils";
-import { Board, Column, Task } from "@/lib/types";
+import { useEffect, useState } from "react";
+import { Modal, ModalBody } from "../ui/Modal";
 
 const initialTaskData: Task = {
   id: id(),
@@ -95,7 +95,9 @@ export default function AddOrEditTaskModal() {
     }
   };
 
-  const handleAddNewTaskToDb = (e: React.FormEvent<HTMLButtonElement>) => {
+  const handleAddNewTaskToDb = async (
+    e: React.FormEvent<HTMLButtonElement>
+  ) => {
     e.preventDefault();
     const { title, status } = taskData!;
 
@@ -142,12 +144,13 @@ export default function AddOrEditTaskModal() {
           columns: columnsCopy,
         };
         boardsCopy[activeBoardIndex] = updatedBoard;
-        updateBoardToDb(boardsCopy);
+        await updateBoardToDb(boardsCopy);
+        closeModal();
       }
     }
   };
 
-  const handleEditTaskToDb = (e: React.FormEvent<HTMLButtonElement>) => {
+  const handleEditTaskToDb = async (e: React.FormEvent<HTMLButtonElement>) => {
     e.preventDefault();
     const { title, status } = taskData!;
     if (!title) {
@@ -196,7 +199,8 @@ export default function AddOrEditTaskModal() {
             columns: columnsCopy,
           };
           boardsCopy[activeBoardIndex] = updatedBoard;
-          updateBoardToDb(boardsCopy);
+          await updateBoardToDb(boardsCopy);
+          closeModal();
         } else {
           const getStatusColumn = columns?.find(
             (column: Column) => column.name === status
@@ -225,7 +229,8 @@ export default function AddOrEditTaskModal() {
             columns: columnsCopy,
           };
           boardsCopy[activeBoardIndex] = updatedBoard;
-          updateBoardToDb(boardsCopy);
+          await updateBoardToDb(boardsCopy);
+          closeModal();
         }
       }
     }

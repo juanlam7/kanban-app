@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Modal, ModalBody } from "./Modal";
 import { useAppSelector, useAppDispatch } from "@/redux/hooks";
 import {
   getAddAndEditBoardModalValue,
@@ -16,6 +15,7 @@ import {
 import { FaTimes } from "react-icons/fa";
 import { id } from "@/lib/utils";
 import { Board } from "@/lib/types";
+import { Modal, ModalBody } from "../ui/Modal";
 
 const addBoardData = {
   id: id(),
@@ -105,7 +105,7 @@ export default function AddAndEditBoardModal() {
     }
   };
 
-  const handleAddNewBoardToDb = (e: React.FormEvent<HTMLButtonElement>) => {
+  const handleAddNewBoardToDb = async (e: React.FormEvent<HTMLButtonElement>) => {
     e.preventDefault();
 
     const emptyColumnStringChecker = boardData?.columns.some(
@@ -127,12 +127,13 @@ export default function AddAndEditBoardModal() {
       if (data) {
         const [boards] = data;
         const addBoard = [...boards.boards, boardData];
-        updateBoardToDb(addBoard);
+        await updateBoardToDb(addBoard);
+        closeModal()
       }
     }
   };
 
-  const handleEditBoardToDb = (e: React.FormEvent<HTMLButtonElement>) => {
+  const handleEditBoardToDb = async (e: React.FormEvent<HTMLButtonElement>) => {
     e.preventDefault();
     const emptyColumnStringChecker = boardData?.columns.some(
       (column) => column.name === ""
@@ -159,7 +160,8 @@ export default function AddAndEditBoardModal() {
           columns: boardData!.columns,
         };
         boardsCopy[activeBoardIndex] = updatedBoard;
-        updateBoardToDb(boardsCopy);
+        await updateBoardToDb(boardsCopy);
+        closeModal()
       }
     }
   };

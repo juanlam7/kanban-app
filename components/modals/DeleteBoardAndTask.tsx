@@ -1,21 +1,21 @@
 "use client";
 
-import { Modal, ModalBody } from "./Modal";
-import { useAppDispatch, useAppSelector } from "@/redux/hooks";
+import { Board } from "@/lib/types";
 import {
   closeDeleteBoardAndTaskModal,
-  getDeleteBoardAndTaskModalValue,
-  getDeleteBoardAndTaskModalVariantValue,
-  getDeleteBoardAndTaskModalTitle,
+  getCurrentBoardName,
   getDeleteBoardAndTaskModalIndex,
   getDeleteBoardAndTaskModalStatus,
-  getCurrentBoardName,
+  getDeleteBoardAndTaskModalTitle,
+  getDeleteBoardAndTaskModalValue,
+  getDeleteBoardAndTaskModalVariantValue,
 } from "@/redux/features/appSlice";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import {
   useFetchDataFromDbQuery,
   useUpdateBoardToDbMutation,
 } from "@/redux/services/apiSlice";
-import { Board } from "@/lib/types";
+import { Modal, ModalBody } from "../ui/Modal";
 
 export default function DeleteBoardOrTaskModal() {
   const dispatch = useAppDispatch();
@@ -29,7 +29,7 @@ export default function DeleteBoardOrTaskModal() {
   const { data } = useFetchDataFromDbQuery();
   const [updateBoardToDb, { isLoading }] = useUpdateBoardToDbMutation();
 
-  const handleDelete = (e: React.FormEvent<HTMLButtonElement>) => {
+  const handleDelete = async (e: React.FormEvent<HTMLButtonElement>) => {
     e.preventDefault();
     if (data) {
       if (modalVariant === "Delete this board?") {
@@ -38,7 +38,8 @@ export default function DeleteBoardOrTaskModal() {
           const updatedBoards = boards.boards.filter(
             (board: { name: string }) => board.name !== currentBoardName
           );
-          updateBoardToDb(updatedBoards);
+          await updateBoardToDb(updatedBoards);
+          closeModal()
         }
       } else {
         if (taskIndex !== undefined && taskStatus && currentBoardName) {
@@ -58,7 +59,8 @@ export default function DeleteBoardOrTaskModal() {
             }
             return board;
           });
-          updateBoardToDb(updatedBoards);
+          await updateBoardToDb(updatedBoards);
+          closeModal()
         }
       }
     }
