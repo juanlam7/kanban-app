@@ -18,13 +18,13 @@ export default function Navbar() {
 
   useEffect(() => {
     if (data) {
-      const activeBoardData = data[0].boards.find(
+      const activeBoardData = data[0]?.boards.find(
         (board: { name: string }) => board.name === currentBoardName
       );
       if (activeBoardData) {
         dispatch(setCurrentBoardName(activeBoardData.name));
       } else {
-        dispatch(setCurrentBoardName((data[0].boards[0] && data[0].boards[0].name) ?? 'Not board'));
+        dispatch(setCurrentBoardName((data[0]?.boards[0] && data[0]?.boards[0].name) ?? 'Not board'));
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

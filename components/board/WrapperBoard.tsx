@@ -13,17 +13,12 @@ import { Board } from "@/lib/types";
 const WrapperBoard = () => {
   const { data, isLoading } = useFetchDataFromDbQuery();
   const currentBoardTitle = useAppSelector(getCurrentBoardName);
-  const [activeBoard, setActiveBoard] = useState<Board>();
+  const [activeBoards, setActiveBoards] = useState<Board[]>([]);
   const dispatch = useAppDispatch();
 
   useEffect(() => {
     if (data) {
-      const activeBoardData = data[0]?.boards.find(
-        (board) => board.name === currentBoardTitle
-      );
-      if (activeBoardData) {
-        setActiveBoard(activeBoardData);
-      }
+      setActiveBoards(data[0].boards);
     }
   }, [data, currentBoardTitle]);
 
@@ -37,10 +32,12 @@ const WrapperBoard = () => {
         <p className="text-3xl w-full text-center font-bold">
           Loading tasks...
         </p>
-      ) : activeBoard && activeBoard?.columns?.length > 0 ? (
+      ) : data && activeBoards[0] && activeBoards[0].columns.length > 0 ? (
+        // TODO: change activeBoards[0] to handled index of active board
         <BoardSectionList
-          currentBoard={activeBoard}
+          AllBoards={activeBoards}
           key={currentBoardTitle}
+          currentBoardTitle={currentBoardTitle}
           AddColumn={handleAddColumn}
         />
       ) : (

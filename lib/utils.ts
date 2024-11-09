@@ -101,7 +101,8 @@ export function addOrUpdateTaskToColumnImmutable(
 
 export const transformFromBoardSectionToBoard = (
   arrayTasks: BoardSections,
-  boardName: string
+  boardName: string,
+  boardId: string
 ): Board => {
   const columns: Column[] = Object.entries(arrayTasks).map(
     ([status, tasks]) => ({
@@ -109,13 +110,14 @@ export const transformFromBoardSectionToBoard = (
       name: status.toLowerCase(),
       tasks: tasks.map((task) => ({
         ...task,
+        id: task.id,
         status: status.toLowerCase(),
       })),
     })
   );
 
   return {
-    id: id(),
+    id: boardId,
     name: boardName,
     columns,
   };

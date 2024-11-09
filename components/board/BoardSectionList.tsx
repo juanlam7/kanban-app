@@ -4,7 +4,9 @@ import {
   findBoardSectionContainer,
   getTaskById,
   transformBoard,
+  transformFromBoardSectionToBoard,
 } from "@/lib/utils";
+import { useUpdateBoardToDbMutation } from "@/redux/services/apiSlice";
 import {
   DndContext,
   DragEndEvent,
@@ -26,15 +28,20 @@ import TaskItem from "./TaskItem";
 
 interface BoardSectionListProps {
   AddColumn: () => void;
-  currentBoard: Board;
+  AllBoards: Board[];
+  currentBoardTitle: string;
 }
 
 const BoardSectionList = ({
   AddColumn,
-  currentBoard,
+  AllBoards,
+  currentBoardTitle,
 }: BoardSectionListProps) => {
+  // TODO: use this isLoading from useUpdateBoardToDbMutation to show a toast with task change state successfully
+  const [updateBoardToDb] = useUpdateBoardToDbMutation();
   const [boardSections, setBoardSections] = useState<BoardSectionsType>({});
   const [activeTaskId, setActiveTaskId] = useState<null | string>(null);
+  const [currentBoard, setCurrentBoard] = useState<Board>();
 
   const sensors = useSensors(
     useSensor(PointerSensor),
@@ -44,9 +51,19 @@ const BoardSectionList = ({
   );
 
   useEffect(() => {
-    const initializedSections = transformBoard(currentBoard);
-    setBoardSections(initializedSections);
-  }, [currentBoard]);
+    if (AllBoards) {
+      const activeBoardData = AllBoards.find(
+        (board) => board.name === currentBoardTitle
+      );
+      if (activeBoardData) {
+        setCurrentBoard(activeBoardData);
+      }
+    }
+    if (currentBoard) {
+      const initializedSections = transformBoard(currentBoard);
+      setBoardSections(initializedSections);
+    }
+  }, [currentBoard, AllBoards, currentBoardTitle]);
 
   const handleDragStart = ({ active }: DragStartEvent) => {
     setActiveTaskId(active.id as string);
@@ -135,15 +152,28 @@ const BoardSectionList = ({
     }
 
     setActiveTaskId(null);
+    if (currentBoard) {
+      const addBoard = transformFromBoardSectionToBoard(
+        boardSections,
+        currentBoardTitle,
+        currentBoard?.id
+      );
+
+      const newBoards = AllBoards.map((item) =>
+        item.id === addBoard.id ? addBoard : item
+      );
+      updateBoardToDb(newBoards);
+    }
   };
 
   const dropAnimation: DropAnimation = {
     ...defaultDropAnimation,
   };
 
-  const task = activeTaskId
-    ? getTaskById(extractTasks(currentBoard), activeTaskId)
-    : null;
+  const task =
+    activeTaskId && currentBoard
+      ? getTaskById(extractTasks(currentBoard), activeTaskId)
+      : null;
 
   return (
     <DndContext
@@ -163,14 +193,15 @@ const BoardSectionList = ({
             />
           </div>
         ))}
-        {Object.keys(boardSections).length < 7 && (
-          <div
-            onClick={AddColumn}
-            className="rounded-md bg-white w-[17.5rem] mt-12 shrink-0 flex justify-center items-center cursor-pointer"
-          >
-            <p className="font-bold text-black text-2xl">+ New Column</p>
-          </div>
-        )}
+        {Object.keys(boardSections).length < 7 &&
+          Object.keys(boardSections).length !== 0 && (
+            <div
+              onClick={AddColumn}
+              className="rounded-md bg-white w-[17.5rem] mt-12 shrink-0 flex justify-center items-center cursor-pointer"
+            >
+              <p className="font-bold text-black text-2xl">+ New Column</p>
+            </div>
+          )}
         <DragOverlay dropAnimation={dropAnimation}>
           {task ? <TaskItem task={task} /> : null}
         </DragOverlay>
