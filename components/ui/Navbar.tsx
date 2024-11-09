@@ -24,7 +24,7 @@ export default function Navbar() {
       if (activeBoardData) {
         dispatch(setCurrentBoardName(activeBoardData.name));
       } else {
-        dispatch(setCurrentBoardName(data[0].boards[0].name));
+        dispatch(setCurrentBoardName((data[0].boards[0] && data[0].boards[0].name) ?? 'Not board'));
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

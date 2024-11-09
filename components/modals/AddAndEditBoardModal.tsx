@@ -123,7 +123,7 @@ export default function AddAndEditBoardModal() {
       setEmptyColumnIndex(emptyColumn);
     }
 
-    if (boardData?.name !== "" && !emptyColumnStringChecker) {
+    if (boardData && boardData?.name !== "" && !emptyColumnStringChecker) {
       if (data) {
         const [boards] = data;
         const addBoard = [...boards.boards, boardData];

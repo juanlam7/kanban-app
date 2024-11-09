@@ -1,11 +1,9 @@
 "use client";
 
-import { Board, Column, Task } from "@/lib/types";
-import { id } from "@/lib/utils";
+import { Column, Task } from "@/lib/types";
+import { addOrUpdateTaskToColumnImmutable, id } from "@/lib/utils";
 import {
   closeAddAndEditTaskModal,
-  getAddAndEditTaskModalIndex,
-  getAddAndEditTaskModalName,
   getAddAndEditTaskModalTitle,
   getAddAndEditTaskModalValue,
   getAddAndEditTaskModalVariantValue,
@@ -40,8 +38,6 @@ export default function AddOrEditTaskModal() {
   const closeModal = () => dispatch(closeAddAndEditTaskModal());
   const currentBoardTitle = useAppSelector(getCurrentBoardName);
   const currentTaskTitle = useAppSelector(getAddAndEditTaskModalTitle);
-  const currentTaskIndex = useAppSelector(getAddAndEditTaskModalIndex);
-  const initialTaskColumn = useAppSelector(getAddAndEditTaskModalName);
 
   useEffect(() => {
     if (data) {
@@ -120,31 +116,18 @@ export default function AddOrEditTaskModal() {
     if (title && status && doesStatusExists) {
       if (data) {
         const [boards] = data;
-        const boardsCopy = [...boards.boards];
-        const activeBoard = boardsCopy.find(
-          (board: Board) => board.name === currentBoardTitle
+        const newData = addOrUpdateTaskToColumnImmutable(
+          boards,
+          currentBoardTitle,
+          status,
+          {
+            id: id(),
+            title: title,
+            status: status,
+          }
         );
-        const activeBoardIndex = boardsCopy.findIndex(
-          (board: Board) => board.name === currentBoardTitle
-        );
-        const { columns } = activeBoard!;
-        const getStatusColumn = columns?.find(
-          (column: Column) => column.name === status
-        );
-        const getStatusColumnIndex = columns?.findIndex(
-          (column: Column) => column.name === status
-        );
-        const { tasks } = getStatusColumn!;
-        const addNewTask = [...tasks, { id: id(), title, status }];
-        const updatedStatusColumn = { ...getStatusColumn!, tasks: addNewTask };
-        const columnsCopy = [...columns];
-        columnsCopy[getStatusColumnIndex] = updatedStatusColumn;
-        const updatedBoard = {
-          ...boards.boards[activeBoardIndex],
-          columns: columnsCopy,
-        };
-        boardsCopy[activeBoardIndex] = updatedBoard;
-        await updateBoardToDb(boardsCopy);
+
+        await updateBoardToDb(newData.boards);
         closeModal();
       }
     }
@@ -152,7 +135,7 @@ export default function AddOrEditTaskModal() {
 
   const handleEditTaskToDb = async (e: React.FormEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    const { title, status } = taskData!;
+    const { title, status, id } = taskData!;
     if (!title) {
       setIsTaskTitleEmpty(true);
     }
@@ -168,70 +151,19 @@ export default function AddOrEditTaskModal() {
     if (title && status && doesStatusExists) {
       if (data) {
         const [boards] = data;
-        const boardsCopy = [...boards.boards];
-        const activeBoard = boardsCopy.find(
-          (board: { name: string }) => board.name === currentBoardTitle
-        );
-        const activeBoardIndex = boardsCopy.findIndex(
-          (board: { name: string }) => board.name === currentBoardTitle
-        );
-        const { columns } = activeBoard!;
-        const getStatusColumnIndex = columns?.findIndex(
-          (column: { name: string }) => column.name === status
+        const newData = addOrUpdateTaskToColumnImmutable(
+          boards,
+          currentBoardTitle,
+          status,
+          {
+            id: id,
+            title: title,
+            status: status,
+          }
         );
 
-        if (status === initialTaskColumn) {
-          const updatedStatusColumn = {
-            ...columns[getStatusColumnIndex],
-            tasks: columns[getStatusColumnIndex]?.tasks?.map(
-              (task: Task, index: number) => {
-                if (index === currentTaskIndex) {
-                  return { title, status, id: id() };
-                }
-                return task;
-              }
-            ),
-          };
-          const columnsCopy = [...columns];
-          columnsCopy[getStatusColumnIndex] = updatedStatusColumn;
-          const updatedBoard = {
-            ...boards.boards[activeBoardIndex],
-            columns: columnsCopy,
-          };
-          boardsCopy[activeBoardIndex] = updatedBoard;
-          await updateBoardToDb(boardsCopy);
-          closeModal();
-        } else {
-          const getStatusColumn = columns?.find(
-            (column: Column) => column.name === status
-          );
-          const getPrevStatusColumn = columns?.find(
-            (column: Column) => column.name === initialTaskColumn
-          );
-          const getPrevStatusColumnIndex = columns?.findIndex(
-            (column: Column) => column.name === initialTaskColumn
-          );
-          const updatedPrevStatusColumn = {
-            ...getPrevStatusColumn!,
-            tasks: getPrevStatusColumn!.tasks.filter(
-              (_task, index: number) => index !== currentTaskIndex
-            ),
-          };
-          const updatedStatusColumn = {
-            ...getStatusColumn!,
-            tasks: [...getStatusColumn!.tasks, { title, status, id: id() }],
-          };
-          const columnsCopy = [...columns];
-          columnsCopy[getStatusColumnIndex] = updatedStatusColumn;
-          columnsCopy[getPrevStatusColumnIndex] = updatedPrevStatusColumn;
-          const updatedBoard = {
-            ...boards.boards[activeBoardIndex],
-            columns: columnsCopy,
-          };
-          boardsCopy[activeBoardIndex] = updatedBoard;
-          await updateBoardToDb(boardsCopy);
-          closeModal();
-        }
+        await updateBoardToDb(newData.boards);
+        closeModal();
       }
     }
   };

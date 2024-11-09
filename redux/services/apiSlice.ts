@@ -2,7 +2,7 @@ import { createApi, fakeBaseQuery } from "@reduxjs/toolkit/query/react";
 import { getSession } from "next-auth/react";
 import { collection, doc, getDocs, updateDoc } from "firebase/firestore";
 import { db } from "@/lib/firebaseConfig";
-import { AllBoards, QueryAllBoards } from "@/lib/types";
+import { AllBoards, Board, QueryAllBoards } from "@/lib/types";
 
 // TODO: Move firebase request to a repository folder where all endpoint calls will be handled no matter if there are API Rest or Firebase request
 
@@ -38,7 +38,7 @@ export const fireStoreApi = createApi({
       providesTags: ["Tasks"],
     }),
     updateBoardToDb: builder.mutation({
-      async queryFn(boardData) {
+      async queryFn(boardData: Board[]) {
         try {
           const session = await getSession();
           if (session?.user) {
