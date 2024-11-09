@@ -1,4 +1,10 @@
-import { BoardSections as BoardSectionsType, Task } from "@/lib/types";
+import { Board, BoardSections as BoardSectionsType } from "@/lib/types";
+import {
+  extractTasks,
+  findBoardSectionContainer,
+  getTaskById,
+  transformBoard,
+} from "@/lib/utils";
 import {
   DndContext,
   DragEndEvent,
@@ -17,20 +23,15 @@ import { arrayMove, sortableKeyboardCoordinates } from "@dnd-kit/sortable";
 import { useEffect, useState } from "react";
 import BoardSection from "./BoardSection";
 import TaskItem from "./TaskItem";
-import {
-  findBoardSectionContainer,
-  getTaskById,
-  initializeBoard,
-} from "@/lib/utils";
 
 interface BoardSectionListProps {
-  initial_tasks: Task[];
   AddColumn: () => void;
+  currentBoard: Board;
 }
 
 const BoardSectionList = ({
-  initial_tasks,
   AddColumn,
+  currentBoard,
 }: BoardSectionListProps) => {
   const [boardSections, setBoardSections] = useState<BoardSectionsType>({});
   const [activeTaskId, setActiveTaskId] = useState<null | string>(null);
@@ -43,9 +44,9 @@ const BoardSectionList = ({
   );
 
   useEffect(() => {
-    const initializedSections = initializeBoard(initial_tasks);
+    const initializedSections = transformBoard(currentBoard);
     setBoardSections(initializedSections);
-  }, [initial_tasks]);
+  }, [currentBoard]);
 
   const handleDragStart = ({ active }: DragStartEvent) => {
     setActiveTaskId(active.id as string);
@@ -140,7 +141,9 @@ const BoardSectionList = ({
     ...defaultDropAnimation,
   };
 
-  const task = activeTaskId ? getTaskById(initial_tasks, activeTaskId) : null;
+  const task = activeTaskId
+    ? getTaskById(extractTasks(currentBoard), activeTaskId)
+    : null;
 
   return (
     <DndContext

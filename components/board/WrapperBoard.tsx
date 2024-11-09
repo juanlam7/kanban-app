@@ -8,13 +8,12 @@ import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { useFetchDataFromDbQuery } from "@/redux/services/apiSlice";
 import { useEffect, useState } from "react";
 import BoardSectionList from "./BoardSectionList";
-import { Task } from "@/lib/types";
-import { extractTasks } from "@/lib/utils";
+import { Board } from "@/lib/types";
 
 const WrapperBoard = () => {
   const { data, isLoading } = useFetchDataFromDbQuery();
   const currentBoardTitle = useAppSelector(getCurrentBoardName);
-  const [initTasks, setInitTasks] = useState<Task[]>([]);
+  const [activeBoard, setActiveBoard] = useState<Board>();
   const dispatch = useAppDispatch();
 
   useEffect(() => {
@@ -23,7 +22,7 @@ const WrapperBoard = () => {
         (board) => board.name === currentBoardTitle
       );
       if (activeBoardData) {
-        setInitTasks(extractTasks(activeBoardData));
+        setActiveBoard(activeBoardData);
       }
     }
   }, [data, currentBoardTitle]);
@@ -38,9 +37,9 @@ const WrapperBoard = () => {
         <p className="text-3xl w-full text-center font-bold">
           Loading tasks...
         </p>
-      ) : initTasks.length > 0 ? (
+      ) : activeBoard && activeBoard?.columns?.length > 0 ? (
         <BoardSectionList
-          initial_tasks={initTasks}
+          currentBoard={activeBoard}
           key={currentBoardTitle}
           AddColumn={handleAddColumn}
         />

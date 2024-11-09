@@ -1,6 +1,7 @@
+import { AllBoards } from "./types";
 import { id } from "./utils";
 
-export const data = {
+export const data: AllBoards = {
   boards: [
     {
       id: id(),
@@ -25,13 +26,7 @@ export const data = {
         {
           id: id(),
           name: "in progress",
-          tasks: [
-            {
-              id: id(),
-              title: "Review early feedback and plan next steps for roadmap",
-              status: "in progress",
-            },
-          ],
+          tasks: [],
         },
         {
           id: id(),
