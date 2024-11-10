@@ -1,6 +1,7 @@
 "use client";
 
 import {
+  getActiveBoardIndex,
   getCurrentBoardName,
   openAddAndEditBoardModal,
 } from "@/redux/features/appSlice";
@@ -13,6 +14,7 @@ import { Board } from "@/lib/types";
 const WrapperBoard = () => {
   const { data, isLoading } = useFetchDataFromDbQuery();
   const currentBoardTitle = useAppSelector(getCurrentBoardName);
+  const activeBoardIndex = useAppSelector(getActiveBoardIndex);
   const [activeBoards, setActiveBoards] = useState<Board[]>([]);
   const dispatch = useAppDispatch();
 
@@ -32,8 +34,9 @@ const WrapperBoard = () => {
         <p className="text-3xl w-full text-center font-bold">
           Loading tasks...
         </p>
-      ) : data && activeBoards[0] && activeBoards[0].columns.length > 0 ? (
-        // TODO: change activeBoards[0] to handled index of active board
+      ) : data &&
+        activeBoards[0] &&
+        activeBoards[activeBoardIndex].columns.length > 0 ? (
         <BoardSectionList
           AllBoards={activeBoards}
           key={currentBoardTitle}

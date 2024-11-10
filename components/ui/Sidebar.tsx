@@ -1,10 +1,12 @@
 "use client";
 
-import { useState } from "react";
-import { useAppDispatch } from "@/redux/hooks";
+import { useEffect, useState } from "react";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { useFetchDataFromDbQuery } from "@/redux/services/apiSlice";
 import {
+  getCurrentBoardName,
   openAddAndEditBoardModal,
+  setActiveBoardIndex,
   setCurrentBoardName,
 } from "@/redux/features/appSlice";
 import { Button } from "./button";
@@ -15,11 +17,31 @@ export default function Sidebar() {
 
   const { data } = useFetchDataFromDbQuery();
   const dispatch = useAppDispatch();
+  const currentBoardName = useAppSelector(getCurrentBoardName);
+
+  useEffect(() => {
+    if (!data || !data[0]?.boards) return;
+
+    const boards = data[0].boards;
+    const activeBoardIndex = boards.findIndex(
+      (board: { name: string }) => board.name === currentBoardName
+    );
+
+    const activeBoard =
+      activeBoardIndex !== -1 ? boards[activeBoardIndex] : boards[0];
+    dispatch(setCurrentBoardName(activeBoard?.name ?? ""));
+    dispatch(
+      setActiveBoardIndex(activeBoardIndex !== -1 ? activeBoardIndex : 0)
+    );
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [data, currentBoardName]);
 
   const handleNav = (index: number, name: string) => {
     setActive(index);
     dispatch(setCurrentBoardName(name));
   };
+
   return (
     <aside className="w-[18.75rem] flex-none dark:bg-dark-grey h-full py-6 pr-6">
       {data && (

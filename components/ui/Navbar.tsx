@@ -1,34 +1,17 @@
 "use client";
 
-import { useAppDispatch, useAppSelector } from "@/redux/hooks";
-import { useFetchDataFromDbQuery } from "@/redux/services/apiSlice";
-import { useEffect, useState } from "react";
 import {
   getCurrentBoardName,
   openAddAndEditTaskModal,
-  setCurrentBoardName,
 } from "@/redux/features/appSlice";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
+import { useState } from "react";
 import { Button } from "./button";
 import Dropdown from "./Dropdown";
 
 export default function Navbar() {
   const [show, setShow] = useState<boolean>(false);
-  const { data } = useFetchDataFromDbQuery();
   const dispatch = useAppDispatch();
-
-  useEffect(() => {
-    if (data) {
-      const activeBoardData = data[0]?.boards.find(
-        (board: { name: string }) => board.name === currentBoardName
-      );
-      if (activeBoardData) {
-        dispatch(setCurrentBoardName(activeBoardData.name));
-      } else {
-        dispatch(setCurrentBoardName((data[0]?.boards[0] && data[0]?.boards[0].name) ?? 'Not board'));
-      }
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [data]);
 
   const currentBoardName = useAppSelector(getCurrentBoardName);
 

@@ -52,6 +52,7 @@ const BoardSectionList = ({
 
   useEffect(() => {
     if (AllBoards) {
+      // seach for all comparison board.name === to replace by global state activeBoardIndex 
       const activeBoardData = AllBoards.find(
         (board) => board.name === currentBoardTitle
       );
