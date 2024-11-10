@@ -39,28 +39,29 @@ export default function DeleteBoardOrTaskModal() {
             (board: { name: string }) => board.name !== currentBoardName
           );
           await updateBoardToDb(updatedBoards);
-          closeModal()
+          closeModal();
         }
       } else {
         if (taskIndex !== undefined && taskStatus && currentBoardName) {
           const [boards] = data;
           const updatedBoards = boards.boards.map((board: Board) => {
-            if (board.name === currentBoardName) {
-              const updatedColumns = board.columns.map((column) => {
-                if (column.name === taskStatus) {
-                  const updatedTasks = column.tasks.filter(
-                    (_, index: number) => index !== taskIndex
-                  );
-                  return { ...column, tasks: updatedTasks };
-                }
+            if (board.name !== currentBoardName) return board;
+
+            const updatedColumns = board.columns.map((column) => {
+              if (column.name.toLowerCase() !== taskStatus.toLowerCase())
                 return column;
-              });
-              return { ...board, columns: updatedColumns };
-            }
-            return board;
+
+              const updatedTasks = column.tasks.filter(
+                (_, index) => index !== taskIndex
+              );
+              return { ...column, tasks: updatedTasks };
+            });
+
+            return { ...board, columns: updatedColumns };
           });
+
           await updateBoardToDb(updatedBoards);
-          closeModal()
+          closeModal();
         }
       }
     }
