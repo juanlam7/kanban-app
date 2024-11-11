@@ -10,6 +10,7 @@ import { useFetchDataFromDbQuery } from "@/redux/services/apiSlice";
 import { useEffect, useState } from "react";
 import BoardSectionList from "./BoardSectionList";
 import { Board } from "@/lib/types";
+import { Button } from "../ui/button";
 
 const WrapperBoard = () => {
   const { data, isLoading } = useFetchDataFromDbQuery();
@@ -49,12 +50,12 @@ const WrapperBoard = () => {
             <p className="text-black text-sm">
               This board is empty. Create a new column to get started.
             </p>
-            <button
+            <Button
               onClick={handleAddColumn}
-              className="bg-blue-500 text-black px-4 py-2 flex mt-6 rounded-3xl items-center space-x-2"
+              className="px-4 py-2 flex mt-6 rounded-3xl items-center space-x-2"
             >
               <p>+ Add New Column</p>
-            </button>
+            </Button>
           </div>
         </div>
       )}

@@ -5,7 +5,7 @@ import { useAppDispatch } from "@/redux/hooks";
 interface IDropdown {
   show: boolean;
 }
-
+// TODO: Improve this component, close the opcions when it is not hover
 export default function Dropdown({ show }: IDropdown) {
   const dispatch = useAppDispatch();
   return (

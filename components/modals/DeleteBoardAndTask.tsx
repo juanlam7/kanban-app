@@ -16,6 +16,7 @@ import {
   useUpdateBoardToDbMutation,
 } from "@/redux/services/apiSlice";
 import { Modal, ModalBody } from "../ui/Modal";
+import { Button } from "../ui/button";
 
 export default function DeleteBoardOrTaskModal() {
   const dispatch = useAppDispatch();
@@ -81,24 +82,26 @@ export default function DeleteBoardOrTaskModal() {
         </div>
         <div className="pt-6 flex space-x-2">
           <div className="w-1/2">
-            <button
+            <Button
               type="submit"
+              variant={"destructive"}
               onClick={(e: React.FormEvent<HTMLButtonElement>) =>
                 handleDelete(e)
               }
-              className="bg-red-500 rounded-3xl py-2 w-full text-sm font-bold"
+              className="rounded-3xl py-2 w-full text-sm font-bold"
             >
               {" "}
               {isLoading ? "Loading" : "Delete"}
-            </button>
+            </Button>
           </div>
           <div className="w-1/2">
-            <button
+            <Button
+              variant={"secondary"}
               onClick={closeModal}
-              className="bg-stone-200 rounded-3xl py-2 w-full text-sm font-bold"
+              className="rounded-3xl py-2 w-full text-sm font-bold"
             >
               Cancel
-            </button>
+            </Button>
           </div>
         </div>
       </ModalBody>

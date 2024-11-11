@@ -17,6 +17,7 @@ import {
 } from "@/redux/services/apiSlice";
 import { useEffect, useState } from "react";
 import { Modal, ModalBody } from "../ui/Modal";
+import { Button } from "../ui/button";
 
 const initialTaskData: Task = {
   id: id(),
@@ -167,7 +168,7 @@ export default function AddOrEditTaskModal() {
       }
     }
   };
-
+  // TODO: use form ui component in all modal with input field
   return (
     <Modal isOpen={isModalOpen} onRequestClose={closeModal}>
       <ModalBody>
@@ -223,21 +224,21 @@ export default function AddOrEditTaskModal() {
             )}
           </div>
           <div className="pt-6">
-            <button
+            <Button
               type="submit"
               onClick={(e: React.FormEvent<HTMLButtonElement>) => {
                 return isVariantAdd
                   ? handleAddNewTaskToDb(e)
                   : handleEditTaskToDb(e);
               }}
-              className="bg-blue-500 rounded-3xl py-2 w-full text-sm font-bold"
+              className="rounded-3xl py-2 w-full text-sm font-bold"
             >
               <p>
                 {isLoading
                   ? "Loading"
                   : `${isVariantAdd ? "Create Task" : "Save Changes"}`}
               </p>
-            </button>
+            </Button>
           </div>
         </div>
       </ModalBody>

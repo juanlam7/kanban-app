@@ -16,6 +16,7 @@ import {
 import { useEffect, useState } from "react";
 import { FaTimes } from "react-icons/fa";
 import { Modal, ModalBody } from "../ui/Modal";
+import { Button } from "../ui/button";
 
 const addBoardData = {
   id: id(),
@@ -233,31 +234,32 @@ export default function AddAndEditBoardModal() {
                     }
                   )}
                 <div className="mt-3">
-                  <button
+                  <Button
+                    variant={"secondary"}
                     type="button"
                     onClick={handleAddNewColumn}
-                    className="bg-stone-200 rounded-3xl py-2 w-full text-sm font-bold"
+                    className="rounded-3xl py-2 w-full text-sm font-bold"
                   >
                     <p>+ Add New Column</p>
-                  </button>
+                  </Button>
                 </div>
               </div>
               <div className="pt-6">
-                <button
+                <Button
                   type="submit"
                   onClick={(e: React.FormEvent<HTMLButtonElement>) => {
                     return isVariantAdd
                       ? handleAddNewBoardToDb(e)
                       : handleEditBoardToDb(e);
                   }}
-                  className="bg-blue-500 rounded-3xl py-2 w-full text-sm font-bold"
+                  className="rounded-3xl py-2 w-full text-sm font-bold"
                 >
                   <p>
                     {isLoading
                       ? "Loading"
                       : `${isVariantAdd ? "Create New Board" : "Save Changes"}`}
                   </p>
-                </button>
+                </Button>
               </div>
             </div>
           </>
