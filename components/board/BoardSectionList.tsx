@@ -58,13 +58,11 @@ const BoardSectionList = ({
       const activeBoardData = AllBoards[activeBoardIndex];
       if (activeBoardData) {
         setCurrentBoard(activeBoardData);
+        const initializedSections = transformBoard(activeBoardData);
+        setBoardSections(initializedSections);
       }
     }
-    if (currentBoard) {
-      const initializedSections = transformBoard(currentBoard);
-      setBoardSections(initializedSections);
-    }
-  }, [currentBoard, AllBoards, activeBoardIndex]);
+  }, [AllBoards, activeBoardIndex]);
 
   const handleDragStart = ({ active }: DragStartEvent) => {
     setActiveTaskId(active.id as string);
@@ -116,6 +114,20 @@ const BoardSectionList = ({
     });
   };
 
+  const updateBoards = (updatedSections: BoardSectionsType) => {
+    if (currentBoard) {
+      const transformedBoard = transformFromBoardSectionToBoard(
+        updatedSections,
+        currentBoardTitle,
+        currentBoard.id
+      );
+      const updatedBoards = AllBoards.map((board) =>
+        board.id === transformedBoard.id ? transformedBoard : board
+      );
+      updateBoardToDb(updatedBoards);
+    }
+  };
+
   const handleDragEnd = ({ active, over }: DragEndEvent) => {
     const activeContainer = findBoardSectionContainer(
       boardSections,
@@ -141,30 +153,26 @@ const BoardSectionList = ({
       (task) => task.id === over?.id
     );
 
-    if (activeIndex !== overIndex) {
-      setBoardSections((boardSection) => ({
-        ...boardSection,
+    setBoardSections((prevBoardSections) => {
+      if (activeIndex === overIndex) {
+        updateBoards(prevBoardSections);
+        return prevBoardSections;
+      }
+
+      const updatedSections = {
+        ...prevBoardSections,
         [overContainer]: arrayMove(
-          boardSection[overContainer],
+          prevBoardSections[overContainer],
           activeIndex,
           overIndex
         ),
-      }));
-    }
+      };
+
+      updateBoards(updatedSections);
+      return updatedSections;
+    });
 
     setActiveTaskId(null);
-    if (currentBoard) {
-      const addBoard = transformFromBoardSectionToBoard(
-        boardSections,
-        currentBoardTitle,
-        currentBoard?.id
-      );
-
-      const newBoards = AllBoards.map((item) =>
-        item.id === addBoard.id ? addBoard : item
-      );
-      updateBoardToDb(newBoards);
-    }
   };
 
   const dropAnimation: DropAnimation = {
