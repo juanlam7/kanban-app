@@ -4,6 +4,7 @@ import { Column, Task } from "@/lib/types";
 import { addOrUpdateTaskToColumnImmutable, id } from "@/lib/utils";
 import {
   closeAddAndEditTaskModal,
+  getActiveBoardIndex,
   getAddAndEditTaskModalTitle,
   getAddAndEditTaskModalValue,
   getAddAndEditTaskModalVariantValue,
@@ -38,12 +39,11 @@ export default function AddOrEditTaskModal() {
   const closeModal = () => dispatch(closeAddAndEditTaskModal());
   const currentBoardTitle = useAppSelector(getCurrentBoardName);
   const currentTaskTitle = useAppSelector(getAddAndEditTaskModalTitle);
+  const activeBoardIndex = useAppSelector(getActiveBoardIndex);
 
   useEffect(() => {
     if (data) {
-      const activeBoard = data[0]?.boards.find(
-        (board: { name: string }) => board.name === currentBoardTitle
-      );
+      const activeBoard = data[0]?.boards[activeBoardIndex];
       if (activeBoard) {
         const { columns } = activeBoard;
         const columnNames = columns.map(

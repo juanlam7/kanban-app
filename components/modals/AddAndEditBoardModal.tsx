@@ -1,20 +1,20 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { useAppSelector, useAppDispatch } from "@/redux/hooks";
+import { Board } from "@/lib/types";
+import { id } from "@/lib/utils";
 import {
+  closeAddAndEditBoardModal,
+  getActiveBoardIndex,
   getAddAndEditBoardModalValue,
   getAddAndEditBoardModalVariantValue,
-  closeAddAndEditBoardModal,
-  getCurrentBoardName,
 } from "@/redux/features/appSlice";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import {
   useFetchDataFromDbQuery,
   useUpdateBoardToDbMutation,
 } from "@/redux/services/apiSlice";
+import { useEffect, useState } from "react";
 import { FaTimes } from "react-icons/fa";
-import { id } from "@/lib/utils";
-import { Board } from "@/lib/types";
 import { Modal, ModalBody } from "../ui/Modal";
 
 const addBoardData = {
@@ -38,19 +38,17 @@ export default function AddAndEditBoardModal() {
   const isVariantAdd = modalVariant === "Add New Board";
   const dispatch = useAppDispatch();
   const isOpen = useAppSelector(getAddAndEditBoardModalValue);
-  const currentBoardTitle = useAppSelector(getCurrentBoardName);
   const closeModal = () => dispatch(closeAddAndEditBoardModal());
   const { data } = useFetchDataFromDbQuery();
   const [updateBoardToDb, { isLoading }] = useUpdateBoardToDbMutation();
+  const activeBoardIndex = useAppSelector(getActiveBoardIndex);
 
   useEffect(() => {
     if (data) {
       if (isVariantAdd) {
         setBoardData(addBoardData);
       } else {
-        const activeBoard = data[0]?.boards.find(
-          (board: { name: string }) => board.name === currentBoardTitle
-        );
+        const activeBoard = data[0]?.boards[activeBoardIndex];
         setBoardData(activeBoard);
       }
     }
@@ -105,7 +103,9 @@ export default function AddAndEditBoardModal() {
     }
   };
 
-  const handleAddNewBoardToDb = async (e: React.FormEvent<HTMLButtonElement>) => {
+  const handleAddNewBoardToDb = async (
+    e: React.FormEvent<HTMLButtonElement>
+  ) => {
     e.preventDefault();
 
     const emptyColumnStringChecker = boardData?.columns.some(
@@ -128,7 +128,7 @@ export default function AddAndEditBoardModal() {
         const [boards] = data;
         const addBoard = [...boards.boards, boardData];
         await updateBoardToDb(addBoard);
-        closeModal()
+        closeModal();
       }
     }
   };
@@ -151,9 +151,6 @@ export default function AddAndEditBoardModal() {
       if (data) {
         const [boards] = data;
         const boardsCopy = [...boards.boards];
-        const activeBoardIndex = boardsCopy.findIndex(
-          (board: { name: string }) => board.name === currentBoardTitle
-        );
         const updatedBoard = {
           ...boards.boards[activeBoardIndex],
           name: boardData!.name,
@@ -161,7 +158,7 @@ export default function AddAndEditBoardModal() {
         };
         boardsCopy[activeBoardIndex] = updatedBoard;
         await updateBoardToDb(boardsCopy);
-        closeModal()
+        closeModal();
       }
     }
   };

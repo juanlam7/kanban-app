@@ -6,6 +6,8 @@ import {
   transformBoard,
   transformFromBoardSectionToBoard,
 } from "@/lib/utils";
+import { getActiveBoardIndex } from "@/redux/features/appSlice";
+import { useAppSelector } from "@/redux/hooks";
 import { useUpdateBoardToDbMutation } from "@/redux/services/apiSlice";
 import {
   DndContext,
@@ -42,6 +44,7 @@ const BoardSectionList = ({
   const [boardSections, setBoardSections] = useState<BoardSectionsType>({});
   const [activeTaskId, setActiveTaskId] = useState<null | string>(null);
   const [currentBoard, setCurrentBoard] = useState<Board>();
+  const activeBoardIndex = useAppSelector(getActiveBoardIndex);
 
   const sensors = useSensors(
     useSensor(PointerSensor),
@@ -52,10 +55,7 @@ const BoardSectionList = ({
 
   useEffect(() => {
     if (AllBoards) {
-      // seach for all comparison board.name === to replace by global state activeBoardIndex 
-      const activeBoardData = AllBoards.find(
-        (board) => board.name === currentBoardTitle
-      );
+      const activeBoardData = AllBoards[activeBoardIndex];
       if (activeBoardData) {
         setCurrentBoard(activeBoardData);
       }
@@ -64,7 +64,7 @@ const BoardSectionList = ({
       const initializedSections = transformBoard(currentBoard);
       setBoardSections(initializedSections);
     }
-  }, [currentBoard, AllBoards, currentBoardTitle]);
+  }, [currentBoard, AllBoards, activeBoardIndex]);
 
   const handleDragStart = ({ active }: DragStartEvent) => {
     setActiveTaskId(active.id as string);
