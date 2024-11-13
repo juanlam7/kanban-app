@@ -20,6 +20,7 @@ export interface Task {
   title: string
   id: string
   status: string
+  // columnId: string
 }
 
 export type BoardSections = {

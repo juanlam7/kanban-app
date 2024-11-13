@@ -46,6 +46,7 @@ export const transformBoard = (board: Board): BoardSections => {
       boardSections[normalizedStatus].push({
         ...task,
         status: normalizedStatus,
+        // columnId: column.id
       });
     }
   }
@@ -106,7 +107,8 @@ export const transformFromBoardSectionToBoard = (
 ): Board => {
   const columns: Column[] = Object.entries(arrayTasks).map(
     ([status, tasks]) => ({
-      id: id(),
+      // TODO: add a field columnId to all task to avoid use this dynamic id
+      id: id(), //this field have to be columnId task field
       name: status.toLowerCase(),
       tasks: tasks.map((task) => ({
         ...task,

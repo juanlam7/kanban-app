@@ -41,7 +41,7 @@ export default function Navbar() {
             >
               ⦀
             </Button>
-            <Dropdown show={show} />
+            <Dropdown setShow={setShow} show={show} />
           </div>
         </div>
       </div>
