@@ -47,7 +47,7 @@ export default function Sidebar() {
       {data && (
         <>
           <p className="text-medium-grey pl-[2.12rem] text-[.95rem] font-semibold uppercase pb-3">
-            {`All Boards (${data[0]?.boards.length})`}
+            {`All Boards (${data[0]?.boards.length ?? 0})`}
           </p>
           {data[0]?.boards.map((board: Board, index: number) => {
             const { name, id } = board;

@@ -1,19 +1,10 @@
-import { getServerSession } from "next-auth";
-import { redirect } from "next/navigation";
-import LoginForm from "./form";
+import WrapperForm from "./components/WrapperForm";
 
 export default async function LoginPage() {
-  const session = await getServerSession();
-  console.log({ session });
-
-  if (session) {
-    redirect("/");
-  }
-
   return (
     <section className="bg-black h-screen flex items-center justify-center">
-      <div className="w-[600px]">
-        <LoginForm />;
+      <div className="w-[600px] text-center">
+        <WrapperForm />
       </div>
     </section>
   );

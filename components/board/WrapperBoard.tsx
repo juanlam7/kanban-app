@@ -21,7 +21,7 @@ const WrapperBoard = () => {
 
   useEffect(() => {
     if (data) {
-      setActiveBoards(data[0].boards);
+      setActiveBoards(data.length > 0 ? data[0].boards : []);
     }
   }, [data, currentBoardTitle]);
 

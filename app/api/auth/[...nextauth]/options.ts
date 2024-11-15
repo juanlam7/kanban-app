@@ -1,6 +1,7 @@
 import { GraphQLClient } from "graphql-request";
 import type { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
+import GoogleProvider from "next-auth/providers/google";
 
 interface LoginResponse {
   login: {
@@ -63,6 +64,10 @@ export const options: NextAuthOptions = {
         }
       },
     }),
+    GoogleProvider({
+      clientId: process.env.GOOGLE_CLIENT_ID!,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+    }),
   ],
   session: {
     strategy: "jwt",
@@ -71,12 +76,14 @@ export const options: NextAuthOptions = {
     signIn: "/login",
   },
   callbacks: {
-    async jwt({ token, user }) {
-      return { ...token, ...user };
+    async jwt({ token, account }) {
+      if (account?.provider === "google") {
+        token.idToken = account.id_token;
+      }
+      return token;
     },
     async session({ session, token }) {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      session.user = token as any;
+      session.idToken = token.idToken;
       return session;
     },
   },
