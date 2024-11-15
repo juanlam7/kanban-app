@@ -5,8 +5,8 @@ import { GoogleAuthProvider, signInWithCredential } from "firebase/auth";
 import { getSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import LoginForm from "../form";
-import LoginGoogle from "@/components/LoginGoogle";
+import LoginForm from "./form";
+import LoginGoogle from "@/app/login/components/LoginGoogle";
 
 const loginToFirebaseWithGoogleCredential = async (idToken: string) => {
   const credential = GoogleAuthProvider.credential(idToken);
