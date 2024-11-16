@@ -16,10 +16,12 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { toast } from "@/components/ui/use-toast";
+import { auth } from "@/lib/firebaseConfig";
+import { EmailAuthProvider, signInWithCredential } from "firebase/auth";
 
 const FormSchema = z.object({
-  username: z.string().min(6, {
-    message: "user name",
+  email: z.string().email({
+    message: "Invalid email address.",
   }),
   password: z.string().min(6, {
     message: "Password must be at least 6 characters.",
@@ -34,24 +36,24 @@ export default function LoginForm() {
   const form = useForm({
     resolver: zodResolver(FormSchema),
     defaultValues: {
-      username: "",
+      email: "",
       password: "",
     },
   });
 
   const onSubmit = async (data: FormData) => {
-    console.log("Submitting form", data);
-
-    const { username, password } = data;
+    const { email, password } = data;
 
     try {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const response: any = await signIn("credentials", {
-        username,
+        email,
         password,
         redirect: false,
       });
-      console.log({ response });
+      const credential = EmailAuthProvider.credential(email, password);
+      await signInWithCredential(auth, credential);
+
       if (!response?.error) {
         router.push("/");
         router.refresh();
@@ -61,7 +63,6 @@ export default function LoginForm() {
         throw new Error("Network response was not ok");
       }
       // Process response here
-      console.log("Login Successful", response);
       toast({ title: "Login Successful" });
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
@@ -75,14 +76,14 @@ export default function LoginForm() {
       <form onSubmit={form.handleSubmit(onSubmit)}>
         <FormField
           control={form.control}
-          name="username"
+          name="email"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Provide username</FormLabel>
+              <FormLabel>Provide email</FormLabel>
               <FormControl>
                 <Input
                   className="text-black"
-                  placeholder="Provide username"
+                  placeholder="Provide email"
                   {...field}
                   type="text"
                 />

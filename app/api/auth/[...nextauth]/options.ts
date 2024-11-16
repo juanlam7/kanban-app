@@ -1,67 +1,41 @@
-import { GraphQLClient } from "graphql-request";
+import { auth } from "@/lib/firebaseConfig";
+import { signInWithEmailAndPassword } from "firebase/auth";
 import type { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
-
-interface LoginResponse {
-  login: {
-    value: string;
-    id: string;
-    name: string;
-    username: string;
-    email: string;
-  };
-}
-
-const graphqlClient = new GraphQLClient(process.env.GRAPHQL_ENDPOINT!);
-
-const mutation = `
-    mutation Login($username: String!, $password: String!) {
-      login(username: $username, password: $password) {
-        value
-        id
-        name
-        username
-        email
-      }
-    }
-`;
 
 export const options: NextAuthOptions = {
   providers: [
     CredentialsProvider({
       name: "Credentials",
       credentials: {
-        username: { label: "username", type: "text" },
+        email: { label: "Email", type: "text" },
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
-        try {
-          const variables = {
-            username: credentials?.username,
-            password: credentials?.password,
-          };
+        if (credentials) {
+          try {
+            const userCredential = await signInWithEmailAndPassword(
+              auth,
+              credentials.email,
+              credentials.password
+            );
 
-          const data: LoginResponse = await graphqlClient.request(
-            mutation,
-            variables
-          );
-
-          if (data) {
-            return {
-              id: data.login.id,
-              name: data.login.name,
-              username: data.login.username,
-              email: data.login.email,
-              token: data.login.value,
-            };
+            const user = userCredential.user;
+            if (user) {
+              return {
+                id: user.uid,
+                email: user.email,
+                token: await user.getIdToken(),
+              };
+            }
+            return null;
+          } catch (error) {
+            console.error("Firebase authentication error:", error);
+            return null;
           }
-
-          return null;
-        } catch (error) {
-          console.error("Error during login:", error);
-          return null;
         }
+        return null;
       },
     }),
     GoogleProvider({
@@ -76,14 +50,22 @@ export const options: NextAuthOptions = {
     signIn: "/login",
   },
   callbacks: {
-    async jwt({ token, account }) {
+    async jwt({ token, account, user }) {
       if (account?.provider === "google") {
         token.idToken = account.id_token;
       }
+
+      if (user && user.token) {
+        token.idToken = user.token;
+      }
+
       return token;
     },
     async session({ session, token }) {
-      session.idToken = token.idToken;
+      session = {
+        ...session,
+        idToken: token.idToken,
+      };
       return session;
     },
   },

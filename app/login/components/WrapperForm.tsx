@@ -3,10 +3,11 @@
 import { auth } from "@/lib/firebaseConfig";
 import { GoogleAuthProvider, signInWithCredential } from "firebase/auth";
 import { getSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import LoginForm from "./form";
 import LoginGoogle from "@/app/login/components/LoginGoogle";
+import { Button } from "@/components/ui/button";
 
 const loginToFirebaseWithGoogleCredential = async (idToken: string) => {
   const credential = GoogleAuthProvider.credential(idToken);
@@ -41,7 +42,7 @@ const WrapperForm = () => {
     };
 
     initLogin();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -53,6 +54,9 @@ const WrapperForm = () => {
         <>
           <LoginForm />
           <LoginGoogle />
+          <Button onClick={() => redirect("/register")}>
+            Register
+          </Button>
         </>
       )}
     </div>
