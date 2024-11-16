@@ -1,11 +1,5 @@
 "use client";
 
-import { zodResolver } from "@hookform/resolvers/zod";
-import { signIn } from "next-auth/react";
-import { useRouter } from "next/navigation";
-import { useForm } from "react-hook-form";
-import * as z from "zod";
-
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -15,9 +9,10 @@ import {
   FormLabel,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { toast } from "@/components/ui/use-toast";
-import { auth } from "@/lib/firebaseConfig";
-import { EmailAuthProvider, signInWithCredential } from "firebase/auth";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import useAuth from "../hooks/useAuth";
 
 const FormSchema = z.object({
   email: z.string().email({
@@ -28,47 +23,17 @@ const FormSchema = z.object({
   }),
 });
 
-type FormData = z.infer<typeof FormSchema>;
-
-export default function LoginForm() {
-  const router = useRouter();
-
+const LoginForm = () => {
+  const { isLoading, handleLogin } = useAuth();
   const form = useForm({
     resolver: zodResolver(FormSchema),
-    defaultValues: {
-      email: "",
-      password: "",
-    },
+    defaultValues: { email: "", password: "" },
   });
 
-  const onSubmit = async (data: FormData) => {
-    const { email, password } = data;
+  const onSubmit = async (data: { email: string; password: string }) => {
+    await handleLogin(data.email, data.password);
 
-    try {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const response: any = await signIn("credentials", {
-        email,
-        password,
-        redirect: false,
-      });
-      const credential = EmailAuthProvider.credential(email, password);
-      await signInWithCredential(auth, credential);
-
-      if (!response?.error) {
-        router.push("/");
-        router.refresh();
-      }
-
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
-      }
-      // Process response here
-      toast({ title: "Login Successful" });
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (error: any) {
-      console.error("Login Failed:", error);
-      toast({ title: "Login Failed", description: error.message });
-    }
+    form.reset();
   };
 
   return (
@@ -100,7 +65,7 @@ export default function LoginForm() {
               <FormControl>
                 <Input
                   className="text-black"
-                  placeholder="Hasło"
+                  placeholder="Password"
                   {...field}
                   type="password"
                 />
@@ -111,11 +76,13 @@ export default function LoginForm() {
         <Button
           type="submit"
           className="hover:scale-110 hover:bg-cyan-700"
-          disabled={form.formState.isSubmitting}
+          disabled={isLoading}
         >
-          {form.formState.isSubmitting ? "Opening...." : "Open Sesame!"}
+          {isLoading ? "Logging in..." : "Login"}
         </Button>
       </form>
     </Form>
   );
-}
+};
+
+export default LoginForm;

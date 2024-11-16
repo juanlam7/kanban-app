@@ -1,49 +1,35 @@
 "use client";
 
-import { auth } from "@/lib/firebaseConfig";
-import { GoogleAuthProvider, signInWithCredential } from "firebase/auth";
 import { getSession } from "next-auth/react";
-import { redirect, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { Button } from "@/components/ui/button";
 import LoginForm from "./form";
 import LoginGoogle from "@/app/login/components/LoginGoogle";
-import { Button } from "@/components/ui/button";
-
-const loginToFirebaseWithGoogleCredential = async (idToken: string) => {
-  const credential = GoogleAuthProvider.credential(idToken);
-  return await signInWithCredential(auth, credential);
-};
+import useAuth from "../hooks/useAuth";
+import { redirect } from "next/navigation";
 
 const WrapperForm = () => {
-  const router = useRouter();
-  const [isLoading, setIsLoading] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("");
+  const { isLoading, errorMessage, handleGoogleLogin } = useAuth();
+  const [loggedIn, setLoggedIn] = useState(false);
 
   useEffect(() => {
     const initLogin = async () => {
-      setIsLoading(true);
+      if (loggedIn) return;
+
+      const session = await getSession();
+      if (!session?.idToken) return;
+
       try {
-        const session = await getSession();
-        if (!session) {
-          console.log("You must be signed in to add data");
-          return;
-        }
-        if (session.idToken) {
-          await loginToFirebaseWithGoogleCredential(session.idToken);
-          router.push("/");
-          router.refresh();
-        }
+        await handleGoogleLogin(session.idToken);
+        setLoggedIn(true);
       } catch (error) {
-        setErrorMessage("Authentication failed. Please try again.");
-        console.error("Error during authentication:", error);
-      } finally {
-        setIsLoading(false);
+        console.error("Error during Google login:", error);
+        setLoggedIn(false);
       }
     };
 
     initLogin();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [loggedIn, handleGoogleLogin]);
 
   return (
     <div className="text-white p-4 md:p-16 border-[1.5px] rounded-lg border-gray-300 flex flex-col items-center justify-center gap-y-6">
@@ -54,9 +40,7 @@ const WrapperForm = () => {
         <>
           <LoginForm />
           <LoginGoogle />
-          <Button onClick={() => redirect("/register")}>
-            Register
-          </Button>
+          <Button onClick={() => redirect("/register")}>Register</Button>
         </>
       )}
     </div>

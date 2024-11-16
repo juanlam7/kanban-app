@@ -37,8 +37,6 @@ export default function FormPage() {
   });
 
   const onSubmit = async (data: FormData) => {
-    console.log("Submitting form", data);
-
     const { username: email, password } = data;
 
     try {
@@ -52,13 +50,14 @@ export default function FormPage() {
       if (!response.ok) {
         throw new Error("Network response was not ok");
       }
-      // Process response here
-      console.log("Registration Successful", response);
+
       toast({ title: "Registration Successful" });
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       console.error("Registration Failed:", error);
       toast({ title: "Registration Failed", description: error.message });
+    } finally {
+      form.reset();
     }
   };
 
@@ -93,10 +92,17 @@ export default function FormPage() {
               </FormItem>
             )}
           />
-          <Button type="submit">Submit</Button>
+          <Button
+            disabled={form.formState.isSubmitting}
+            type="submit"
+            className="hover:scale-110 hover:bg-cyan-700 mt-2"
+          >
+            {form.formState.isSubmitting ? "Sign in...." : "Register"}
+          </Button>
         </form>
       </Form>
       <Button
+        disabled={form.formState.isSubmitting}
         className="text-accent"
         variant="link"
         onClick={() => redirect("/login")}
