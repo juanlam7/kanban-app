@@ -18,7 +18,7 @@ import {
   DropAnimation,
   KeyboardSensor,
   PointerSensor,
-  closestCorners,
+  rectIntersection,
   defaultDropAnimation,
   useSensor,
   useSensors,
@@ -187,7 +187,7 @@ const BoardSectionList = ({
   return (
     <DndContext
       sensors={sensors}
-      collisionDetection={closestCorners}
+      collisionDetection={rectIntersection}
       onDragStart={handleDragStart}
       onDragOver={handleDragOver}
       onDragEnd={handleDragEnd}
