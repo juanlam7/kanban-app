@@ -2,6 +2,7 @@ import { Providers } from "@/redux/provider";
 import type { Metadata } from "next";
 import { Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
+import { ProvidersTheme } from "./providers";
 
 const pjs = Plus_Jakarta_Sans({ subsets: ["latin"], display: "swap" });
 
@@ -19,7 +20,7 @@ export default function RootLayout({
     <html lang="en" className={pjs.className}>
       <body className="h-screen overflow-hidden">
         <Providers>
-          {children}
+          <ProvidersTheme>{children}</ProvidersTheme>
         </Providers>
       </body>
     </html>

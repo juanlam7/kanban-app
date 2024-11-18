@@ -37,7 +37,7 @@ const TaskItem = ({ task, index }: TaskItemProps) => {
   };
 
   return (
-    <div className="bg-white p-6 rounded-md flex items-center justify-between border">
+    <div className="bg-popover p-6 rounded-md flex items-center justify-between border">
       <p>{task.title}</p>
       <div className="flex items-center">
         <MdEdit
@@ -48,7 +48,7 @@ const TaskItem = ({ task, index }: TaskItemProps) => {
         />
         <MdDelete
           onClick={() => onDelete(index!, task.title, task.status)}
-          className="text-lg cursor-pointer text-red-500"
+          className="text-lg cursor-pointer text-destructive"
           onPointerDown={(e) => e.stopPropagation()}
           onDragStart={(e) => e.preventDefault()}
         />

@@ -16,13 +16,15 @@ export default function Navbar() {
   const currentBoardName = useAppSelector(getCurrentBoardName);
 
   return (
-    <nav className="bg-white border flex h-24">
-      <div className="flex-none w-[18.75rem] border-r-2 flex items-center pl-[2.12rem]">
+    <nav className="border flex h-24">
+      <div className="md:flex hidden flex-none w-[18.75rem] border-r-2 flex items-center pl-[2.12rem]">
         <p className="font-bold text-3xl"> Kanban App </p>
       </div>
 
       <div className="flex justify-between w-full items-center pr-[2.12rem]">
-        <p className="text-black text-2xl font-bold pl-6">{currentBoardName}</p>
+        <p className="text-2xl font-bold pl-6">
+          {currentBoardName.length > 0 ? currentBoardName : "Create your first board!"}
+        </p>
 
         <div className="flex items-center space-x-3">
           <Button

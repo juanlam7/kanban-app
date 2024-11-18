@@ -1,23 +1,28 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { useAppDispatch, useAppSelector } from "@/redux/hooks";
-import { useFetchDataFromDbQuery } from "@/redux/services/apiSlice";
+import { Board } from "@/lib/types";
 import {
+  getActiveBoardIndex,
   getCurrentBoardName,
   openAddAndEditBoardModal,
   setActiveBoardIndex,
   setCurrentBoardName,
 } from "@/redux/features/appSlice";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
+import { useFetchDataFromDbQuery } from "@/redux/services/apiSlice";
+import Image from "next/image";
+import { useEffect, useState } from "react";
+import iconShowSidebar from "../../public/icon-show-sidebar.svg";
 import { Button } from "./button";
-import { Board } from "@/lib/types";
+import SidebarFooter from "./sidebar/footer";
 
 export default function Sidebar() {
-  const [active, setActive] = useState<number>(0);
+  const [showSidebar, setShowSidebar] = useState<boolean>(true);
 
   const { data } = useFetchDataFromDbQuery();
   const dispatch = useAppDispatch();
   const currentBoardName = useAppSelector(getCurrentBoardName);
+  const currentBoardIndex = useAppSelector(getActiveBoardIndex);
 
   useEffect(() => {
     if (!data || !data[0]?.boards) return;
@@ -38,46 +43,72 @@ export default function Sidebar() {
   }, [data, currentBoardName]);
 
   const handleNav = (index: number, name: string) => {
-    setActive(index);
+    setActiveBoardIndex(index);
     dispatch(setCurrentBoardName(name));
   };
 
   return (
-    <aside className="w-[18.75rem] flex-none dark:bg-dark-grey h-full py-6 pr-6">
-      {data && (
-        <>
-          <p className="text-medium-grey pl-[2.12rem] text-[.95rem] font-semibold uppercase pb-3">
-            {`All Boards (${data[0]?.boards.length ?? 0})`}
-          </p>
-          {data[0]?.boards.map((board: Board, index: number) => {
-            const { name, id } = board;
-            const isActive = index === active;
-            return (
-              <div
-                key={id}
-                onClick={() => handleNav(index, name)}
-                className={`${
-                  isActive
-                    ? "rounded-tr-full rounded-br-full bg-primary text-white"
-                    : "text-black bg-secondary"
-                } cursor-pointer flex items-center 
-                space-x-2 pl-[2.12rem] py-3 pb-3`}
-              >
-                <p className="text-lg capitalize">{name}</p>
-              </div>
-            );
-          })}
-        </>
-      )}
-      <Button
-        onClick={() => dispatch(openAddAndEditBoardModal("Add New Board"))}
-        variant="ghost"
-        className="flex items-center space-x-2 ml-[2.12rem] py-3"
+    <div className="relative hidden md:block">
+      <aside
+        className={`${
+          !showSidebar
+            ? "w-0 overflow-hidden"
+            : "w-[18.75rem] flex-none h-full py-6 pr-6"
+        }
+        transition-width duration-150 ease-out relative`}
       >
-        <p className="text-base font-bold capitalize text-main-purple">
-          + Create New Board
-        </p>
-      </Button>
-    </aside>
+        {data && (
+          <>
+            <p className="pl-[2.12rem] text-[.95rem] font-semibold uppercase pb-3">
+              {`All Boards (${data[0]?.boards.length ?? 0})`}
+            </p>
+            {data[0]?.boards.map((board: Board, index: number) => {
+              const { name, id } = board;
+              const isActive = index === currentBoardIndex;
+              return (
+                <div
+                  key={id}
+                  onClick={() => handleNav(index, name)}
+                  className={`${
+                    isActive
+                      ? "bg-primary text-accent"
+                      : "transition ease-in duration-150 delay-150 hover:bg-accent dark:hover:bg-accent"
+                  } cursor-pointer rounded-tr-full rounded-br-full flex items-center space-x-2 pl-[2.12rem] py-3 pb-3`}
+                >
+                  <p className="text-lg capitalize">{name}</p>
+                </div>
+              );
+            })}
+          </>
+        )}
+        <Button
+          onClick={() => dispatch(openAddAndEditBoardModal("Add New Board"))}
+          variant="ghost"
+          className="flex items-center space-x-2 pl-[2.12rem] py-3"
+        >
+          <p className="text-base font-bold capitalize text-primary">
+            + Create New Board
+          </p>
+        </Button>
+        <SidebarFooter
+          showSidebar={showSidebar}
+          setShowSidebar={setShowSidebar}
+        />
+      </aside>
+      <div
+        onClick={() => setShowSidebar(!showSidebar)}
+        className={`${
+          !showSidebar ? "block" : "hidden"
+        } cursor-pointer h-12 w-14 bg-ring transition ease-in 
+        duration-150 delay-150 absolute left-full rounded-tr-full rounded-br-full 
+            bottom-4 flex items-center justify-center`}
+      >
+        <Image
+          src={iconShowSidebar}
+          alt="show sidebar"
+          className="object-contain"
+        />
+      </div>
+    </div>
   );
 }

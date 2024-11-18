@@ -47,7 +47,6 @@ const LoginForm = () => {
               <FormLabel>Provide email</FormLabel>
               <FormControl>
                 <Input
-                  className="text-black"
                   placeholder="Provide email"
                   {...field}
                   type="text"
@@ -64,7 +63,6 @@ const LoginForm = () => {
               <FormLabel>Provide Password</FormLabel>
               <FormControl>
                 <Input
-                  className="text-black"
                   placeholder="Password"
                   {...field}
                   type="password"

@@ -11,7 +11,7 @@ export default async function Home() {
       <div className="absolute w-full">
         <Navbar />
       </div>
-      <div className="relative w-full flex mt-24">
+      <div className="relative w-full md:flex flex mt-24">
         <Sidebar />
         <WrapperBoard />
       </div>

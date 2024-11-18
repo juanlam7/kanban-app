@@ -27,7 +27,7 @@ export function Modal({ children, isOpen, onRequestClose }: ModalProps) {
       padding: "0px",
       borderRadius: ".5rem",
       width: "auto",
-      backgroundColor: "#fff",
+      backgroundColor: "#0A1726",
       border: "none",
     },
   };
@@ -48,5 +48,5 @@ interface ModalBody {
 }
 
 export function ModalBody({ children }: ModalBody) {
-  return <form className="w-[21.4rem] md:w-[30rem] p-8">{children}</form>;
+  return <form className="w-[21.4rem] md:w-[30rem] p-8 bg-popover">{children}</form>;
 }

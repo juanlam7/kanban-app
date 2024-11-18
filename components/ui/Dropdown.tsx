@@ -45,7 +45,7 @@ export default function Dropdown({ show, setShow }: IDropdown) {
   return (
     <div
       ref={dropdownRef}
-      className="w-48 absolute top-full bg-white border shadow-lg right-0 py-2 rounded-2xl z-10"
+      className="w-48 absolute top-full bg-accent border shadow-lg right-0 py-2 rounded-2xl z-10"
     >
       <DropdownItem onClick={openEditBoard}>Edit Board</DropdownItem>
       <DropdownItem onClick={openDeleteBoard}>Delete Board</DropdownItem>
@@ -61,10 +61,8 @@ function DropdownItem({
   children: React.ReactNode;
 }) {
   return (
-    <div className="hover:bg-gray-300">
-      <Button variant="link" className="text-sm px-4 py-2" onClick={onClick}>
-        {children}
-      </Button>
-    </div>
+    <Button variant="link" className="text-sm px-4 py-2" onClick={onClick}>
+      {children}
+    </Button>
   );
 }

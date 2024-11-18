@@ -206,9 +206,9 @@ const BoardSectionList = ({
           Object.keys(boardSections).length !== 0 && (
             <div
               onClick={AddColumn}
-              className="rounded-md bg-white w-[17.5rem] mt-12 shrink-0 flex justify-center items-center cursor-pointer"
+              className="rounded-md bg-popover w-[17.5rem] mt-12 shrink-0 flex justify-center items-center cursor-pointer"
             >
-              <p className="font-bold text-black text-2xl">+ New Column</p>
+              <p className="font-bold text-2xl">+ New Column</p>
             </div>
           )}
         <DragOverlay dropAnimation={dropAnimation}>

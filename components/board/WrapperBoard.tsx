@@ -30,7 +30,7 @@ const WrapperBoard = () => {
   };
 
   return (
-    <div className="overflow-x-auto overflow-y-auto w-full p-6 bg-stone-200">
+    <div className="overflow-x-auto overflow-y-auto w-full p-6 bg-secondary">
       {isLoading ? (
         <p className="text-3xl w-full text-center font-bold">
           Loading tasks...
@@ -47,7 +47,7 @@ const WrapperBoard = () => {
       ) : (
         <div className="w-full h-full flex justify-center items-center">
           <div className="flex flex-col items-center">
-            <p className="text-black text-sm">
+            <p className="text-sm">
               This board is empty. Create a new column to get started.
             </p>
             <Button

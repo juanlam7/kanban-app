@@ -39,7 +39,7 @@ const BoardSection = ({ id, title, tasks }: BoardSectionProps) => {
               </div>
             ))
           ) : (
-            <div className="mt-6 h-full rounded-md border-dashed border-4 border-white" />
+            <div className="mt-6 h-full rounded-md border-dashed border-4 border-popover" />
           )}
         </div>
       </SortableContext>
