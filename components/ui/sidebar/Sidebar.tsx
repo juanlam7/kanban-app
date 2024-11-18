@@ -12,9 +12,9 @@ import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { useFetchDataFromDbQuery } from "@/redux/services/apiSlice";
 import Image from "next/image";
 import { useEffect, useState } from "react";
-import iconShowSidebar from "../../public/icon-show-sidebar.svg";
-import { Button } from "./button";
-import SidebarFooter from "./sidebar/footer";
+import iconShowSidebar from "../../../public/icon-show-sidebar.svg";
+import { Button } from "../button";
+import SidebarFooter from "./Footer";
 
 export default function Sidebar() {
   const [showSidebar, setShowSidebar] = useState<boolean>(true);
@@ -23,6 +23,21 @@ export default function Sidebar() {
   const dispatch = useAppDispatch();
   const currentBoardName = useAppSelector(getCurrentBoardName);
   const currentBoardIndex = useAppSelector(getActiveBoardIndex);
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia("(min-width: 768px)");
+    const handleMediaChange = (event: MediaQueryListEvent | MediaQueryList) => {
+      setShowSidebar(event.matches);
+    };
+
+    handleMediaChange(mediaQuery);
+
+    mediaQuery.addEventListener("change", handleMediaChange);
+
+    return () => {
+      mediaQuery.removeEventListener("change", handleMediaChange);
+    };
+  }, []);
 
   useEffect(() => {
     if (!data || !data[0]?.boards) return;
@@ -48,7 +63,7 @@ export default function Sidebar() {
   };
 
   return (
-    <div className="relative hidden md:block">
+    <div className="relative">
       <aside
         className={`${
           !showSidebar

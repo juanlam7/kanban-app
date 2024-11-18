@@ -3,7 +3,7 @@ import AddAndEditBoardModal from "@/components/modals/AddAndEditBoardModal";
 import AddOrEditTaskModal from "@/components/modals/AddAndEditTaskModal";
 import DeleteBoardOrTaskModal from "@/components/modals/DeleteBoardAndTask";
 import Navbar from "@/components/ui/Navbar";
-import Sidebar from "@/components/ui/Sidebar";
+import Sidebar from "@/components/ui/sidebar/Sidebar";
 
 export default async function Home() {
   return (
