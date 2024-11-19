@@ -20,6 +20,7 @@ export default function AuthLayout({
           src={backgroundImage}
           alt="Kanban Background"
           className="w-full h-full object-cover opacity-30"
+          priority
         />
       </div>
 

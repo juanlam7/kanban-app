@@ -85,11 +85,9 @@ export default function AddOrEditTaskModal() {
     }
   };
 
-  const handleTaskStatusChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (taskData) {
-      const newTitle = { ...taskData, status: e.target.value };
-      setTaskData(newTitle);
-    }
+  const handleTaskStatusChange = (e: React.FormEvent<HTMLSelectElement>) => {
+    const target = e.target as HTMLSelectElement;
+    if (taskData) setTaskData({ ...taskData, status: target.value });
   };
 
   const handleAddNewTaskToDb = async (
@@ -200,19 +198,27 @@ export default function AddOrEditTaskModal() {
             <label htmlFor="status" className="text-sm">
               Status
             </label>
-            <div className="pt-2">
-              <input
-                id="status"
-                className={`${
-                  isTaskStatusEmpty || !statusExists
-                    ? "border-red-500"
-                    : "border-stone-200"
-                } border w-full p-2 rounded text-sm cursor-pointer focus:outline-none`}
-                placeholder={columnNames?.join(", ")}
-                value={taskData?.status}
-                onChange={handleTaskStatusChange}
-              />
-            </div>
+            <select
+              id="status"
+              className="outline-none border text-sm rounded-lg block w-full p-2.5 mt-2"
+              onChange={(e) => handleTaskStatusChange(e)}
+              value={taskData?.status}
+            >
+              {columnNames?.map((option) => {
+                return (
+                  <option key={option} value={option}>
+                    {option.toUpperCase()}
+                  </option>
+                );
+              })}
+              {taskData?.status === "" ? (
+                <option value="">
+                  Select Status
+                </option>
+              ) : (
+                ""
+              )}
+            </select>
             {isTaskStatusEmpty ? (
               <p className="text-xs text-red-500">
                 Task status cannot be empty
