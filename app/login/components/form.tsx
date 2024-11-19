@@ -38,7 +38,7 @@ const LoginForm = () => {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="mt-6 space-y-4">
         <FormField
           control={form.control}
           name="email"
@@ -46,11 +46,7 @@ const LoginForm = () => {
             <FormItem>
               <FormLabel>Provide email</FormLabel>
               <FormControl>
-                <Input
-                  placeholder="Provide email"
-                  {...field}
-                  type="text"
-                />
+                <Input placeholder="Provide email" {...field} type="text" />
               </FormControl>
             </FormItem>
           )}
@@ -62,18 +58,14 @@ const LoginForm = () => {
             <FormItem>
               <FormLabel>Provide Password</FormLabel>
               <FormControl>
-                <Input
-                  placeholder="Password"
-                  {...field}
-                  type="password"
-                />
+                <Input placeholder="Password" {...field} type="password" />
               </FormControl>
             </FormItem>
           )}
         />
         <Button
           type="submit"
-          className="hover:scale-110 hover:bg-cyan-700"
+          className="w-full bg-cyan-600 text-white rounded hover:bg-cyan-700 transition"
           disabled={isLoading}
         >
           {isLoading ? "Logging in..." : "Login"}

@@ -1,11 +1,10 @@
+import AuthLayout from "@/components/ui/AuthLayout";
 import WrapperForm from "./components/WrapperForm";
 
-export default async function LoginPage() {
+export default function LoginPage() {
   return (
-    <section className="bg-black h-screen flex items-center justify-center">
-      <div className="w-[600px] text-center">
-        <WrapperForm />
-      </div>
-    </section>
+    <AuthLayout title="Welcome Back" subtitle="Login to manage your tasks">
+      <WrapperForm />
+    </AuthLayout>
   );
 }

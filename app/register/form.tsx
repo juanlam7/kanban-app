@@ -64,7 +64,7 @@ export default function FormPage() {
   return (
     <>
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="mt-6 space-y-4">
           <FormField
             control={form.control}
             name="username"
@@ -95,20 +95,22 @@ export default function FormPage() {
           <Button
             disabled={form.formState.isSubmitting}
             type="submit"
-            className="hover:scale-110 hover:bg-cyan-700 mt-2"
+            className="w-full bg-cyan-600 text-white rounded hover:bg-cyan-700 transition"
           >
             {form.formState.isSubmitting ? "Sign in...." : "Register"}
           </Button>
         </form>
       </Form>
-      <Button
-        disabled={form.formState.isSubmitting}
-        className="text-accent"
-        variant="link"
-        onClick={() => redirect("/login")}
-      >
-        Back login to sign in
-      </Button>
+      <p className="mt-4 text-center text-sm text-gray-600">
+        Already have an account?{" "}
+        <Button
+          disabled={form.formState.isSubmitting}
+          variant="link"
+          onClick={() => redirect("/login")}
+        >
+          Login here
+        </Button>
+      </p>
     </>
   );
 }

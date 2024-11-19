@@ -1,6 +1,7 @@
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
 import FormPage from "./form";
+import AuthLayout from "@/components/ui/AuthLayout";
 
 export default async function RegisterPage() {
   const session = await getServerSession();
@@ -10,10 +11,11 @@ export default async function RegisterPage() {
   }
 
   return (
-    <section className="bg-black h-screen flex items-center justify-center">
-      <div className="w-[600px] text-center">
-        <FormPage />
-      </div>
-    </section>
+    <AuthLayout
+      title="Create an Account"
+      subtitle="Start managing your tasks today"
+    >
+      <FormPage />
+    </AuthLayout>
   );
 }

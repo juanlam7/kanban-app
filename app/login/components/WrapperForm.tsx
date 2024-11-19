@@ -1,18 +1,21 @@
 "use client";
 
-import { getSession } from "next-auth/react";
-import { useEffect, useState } from "react";
-import { Button } from "@/components/ui/button";
-import LoginForm from "./form";
 import LoginGoogle from "@/app/login/components/LoginGoogle";
-import useAuth from "../hooks/useAuth";
+import { Button } from "@/components/ui/button";
+import { getSession } from "next-auth/react";
+import { useTheme } from "next-themes";
 import { redirect } from "next/navigation";
+import { useEffect, useState } from "react";
+import useAuth from "../hooks/useAuth";
+import LoginForm from "./form";
 
 const WrapperForm = () => {
   const { isLoading, errorMessage, handleGoogleLogin } = useAuth();
   const [loggedIn, setLoggedIn] = useState(false);
+  const { setTheme } = useTheme();
 
   useEffect(() => {
+    setTheme("light");
     const initLogin = async () => {
       if (loggedIn) return;
 
@@ -29,21 +32,29 @@ const WrapperForm = () => {
     };
 
     initLogin();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loggedIn, handleGoogleLogin]);
 
   return (
-    <div className="text-white p-4 md:p-16 border-[1.5px] rounded-lg border-gray-300 flex flex-col items-center justify-center gap-y-6">
+    <>
       {errorMessage && <p className="text-red-500">{errorMessage}</p>}
       {isLoading ? (
         <p>Loading...</p>
       ) : (
         <>
           <LoginForm />
+
+          <p className="mt-4 text-center text-sm text-gray-600">
+            Don&apos;t have an account?{" "}
+            <Button variant="link" onClick={() => redirect("/register")}>
+              Sign Up
+            </Button>
+          </p>
+
           <LoginGoogle />
-          <Button onClick={() => redirect("/register")}>Register</Button>
         </>
       )}
-    </div>
+    </>
   );
 };
 

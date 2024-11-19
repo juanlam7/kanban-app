@@ -10,7 +10,7 @@ const LoginGoogle = () => {
 
   return (
     <Button variant="destructive" className="mt-4" onClick={handleSignIn}>
-      Sign in with Google
+      Continue with Google
     </Button>
   );
 };
