@@ -16,7 +16,7 @@ import {
   useUpdateBoardToDbMutation,
 } from "@/redux/services/apiSlice";
 import { useEffect, useState } from "react";
-import { MdDelete, MdEdit } from "react-icons/md";
+import { FaTimes } from "react-icons/fa";
 import { Modal, ModalBody } from "../ui/Modal";
 import { Button } from "../ui/button";
 
@@ -50,7 +50,6 @@ export default function AddOrEditTaskModal() {
   const currentTaskTitle = useAppSelector(getAddAndEditTaskModalTitle);
   const activeBoardIndex = useAppSelector(getActiveBoardIndex);
   const [emptySubtaskIndex, setEmptySubtaskIndex] = useState<number>();
-  const [isViewCompleted, setIsViewCompleted] = useState<boolean>(false);
 
   useEffect(() => {
     if (data) {
@@ -250,12 +249,8 @@ export default function AddOrEditTaskModal() {
                 }{" "}
                 of {taskData?.subtasks.length})
               </label>
-              <MdEdit
-                onClick={() => setIsViewCompleted(!isViewCompleted)}
-                className="text-lg cursor-pointer"
-              />
             </div>
-            <div className="hide-scrollbar overflow-x-auto overflow-y-auto max-h-40">
+            <div className="hide-scrollbar overflow-x-auto overflow-y-auto max-h-28">
               {taskData &&
                 taskData.subtasks &&
                 taskData.subtasks.length > 0 &&
@@ -264,72 +259,52 @@ export default function AddOrEditTaskModal() {
                   return (
                     <div key={id} className="pt-2">
                       <div
-                        className="px-4 py-2 bg-accent w-full flex items-center space-x-4 
-                        cursor-pointer transition ease-in duration-150 delay-150"
+                        className="px-4 py-2 bg-accent w-full flex items-center space-x-4"
                       >
-                        {isViewCompleted ? (
-                          <input
-                            value={title}
-                            className={`${
-                              emptySubtaskIndex === index
-                                ? "border-red-500"
-                                : "border-stone-200"
-                            } border text-sm cursor-pointer w-full p-2 rounded`}
-                            placeholder="e.g Doing"
-                            onChange={(e) => handleSubtaskTitleChange(id)(e)}
-                          />
-                        ) : (
-                          <>
-                            <input
-                              id={title}
-                              type="checkbox"
-                              disabled={isLoading}
-                              checked={isCompleted}
-                              onChange={() => handleIsCompletedStatus(id)}
-                              className="w-4 h-4 rounded focus:ring-2"
-                            />
-                            <label
-                              htmlFor={title}
-                              className={`${
-                                !isCompleted
-                                  ? "dark:text-white text-black"
-                                  : "text-medium-grey"
-                              } text-sm dark:hover:text-white cursor-pointer w-full`}
-                            >
-                              {title}
-                            </label>
-                          </>
-                        )}
-                        <div className="flex items-center">
-                          <MdDelete
-                            onClick={() => handleDeleteSubtask(id)}
-                            className="text-lg cursor-pointer text-destructive"
-                          />
-                        </div>
+                        <input
+                          id={title}
+                          type="checkbox"
+                          disabled={isLoading}
+                          checked={isCompleted}
+                          onChange={() => handleIsCompletedStatus(id)}
+                          className="w-4 h-4 rounded cursor-pointer"
+                        />
+                        <input
+                          value={title}
+                          className={`${
+                            emptySubtaskIndex === index
+                              ? "border-red-500"
+                              : "border-stone-200"
+                          } border-none text-sm cursor-pointer w-full p-2 rounded`}
+                          placeholder="e.g Doing"
+                          onChange={(e) => handleSubtaskTitleChange(id)(e)}
+                        />
+                        <FaTimes
+                          onClick={() => handleDeleteSubtask(id)}
+                          className="text-ls cursor-pointer"
+                        />
                       </div>
-                      {emptySubtaskIndex === index ? (
-                        <p className="text-xs text-red-500">
-                          Subtask name cannot be empty
-                        </p>
-                      ) : (
-                        ""
-                      )}
                     </div>
                   );
                 })}
             </div>
-            {isViewCompleted && (
-              <div className="mt-3">
-                <Button
-                  variant={"secondary"}
-                  type="button"
-                  onClick={handleAddNewSubtask}
-                  className="rounded-3xl py-2 w-full text-sm font-bold"
-                >
-                  <p>+ Add New Subtask</p>
-                </Button>
-              </div>
+            {emptySubtaskIndex ? (
+              <p className="text-xs text-red-500">
+                Subtask name cannot be empty
+              </p>
+            ) : (
+              ""
             )}
+            <div className="mt-3">
+              <Button
+                variant={"secondary"}
+                type="button"
+                onClick={handleAddNewSubtask}
+                className="rounded-3xl py-2 w-full text-sm font-bold"
+              >
+                <p>+ Add New Subtask</p>
+              </Button>
+            </div>
           </div>
 
           <div className="mt-3">
