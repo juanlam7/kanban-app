@@ -20,7 +20,15 @@ export interface Task {
   title: string
   id: string
   status: string
+  description: string
+  subtasks: Subtask[]
   // columnId: string
+}
+
+export interface Subtask {
+  id: string;
+  isCompleted: boolean;
+  title?: string;
 }
 
 export type BoardSections = {

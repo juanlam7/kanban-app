@@ -1,6 +1,6 @@
 "use client";
 
-import { Column, Task } from "@/lib/types";
+import { Column, Subtask, Task } from "@/lib/types";
 import { addOrUpdateTaskToColumnImmutable, id } from "@/lib/utils";
 import {
   closeAddAndEditTaskModal,
@@ -16,13 +16,22 @@ import {
   useUpdateBoardToDbMutation,
 } from "@/redux/services/apiSlice";
 import { useEffect, useState } from "react";
+import { FaTimes } from "react-icons/fa";
 import { Modal, ModalBody } from "../ui/Modal";
 import { Button } from "../ui/button";
 
 const initialTaskData: Task = {
   id: id(),
   title: "",
+  description: "",
   status: "",
+  subtasks: [
+    {
+      id: id(),
+      title: "",
+      isCompleted: false,
+    },
+  ],
 };
 
 export default function AddOrEditTaskModal() {
@@ -31,7 +40,6 @@ export default function AddOrEditTaskModal() {
   const [taskData, setTaskData] = useState<Task>();
   const [isTaskTitleEmpty, setIsTaskTitleEmpty] = useState<boolean>();
   const [isTaskStatusEmpty, setIsTaskStatusEmpty] = useState<boolean>();
-  const [statusExists, setStatusExists] = useState<boolean>(true);
   const [columnNames, setColumnNames] = useState<string[]>();
   const dispatch = useAppDispatch();
   const isModalOpen = useAppSelector(getAddAndEditTaskModalValue);
@@ -41,6 +49,7 @@ export default function AddOrEditTaskModal() {
   const currentBoardTitle = useAppSelector(getCurrentBoardName);
   const currentTaskTitle = useAppSelector(getAddAndEditTaskModalTitle);
   const activeBoardIndex = useAppSelector(getActiveBoardIndex);
+  const [emptySubtaskIndex, setEmptySubtaskIndex] = useState<number>();
 
   useEffect(() => {
     if (data) {
@@ -71,12 +80,12 @@ export default function AddOrEditTaskModal() {
 
   useEffect(() => {
     const timeoutId = setTimeout(() => {
+      setIsTaskTitleEmpty(false);
+      setEmptySubtaskIndex(undefined);
       setIsTaskStatusEmpty(false);
-      setIsTaskStatusEmpty(false);
-      setStatusExists(true);
     }, 3000);
     return () => clearTimeout(timeoutId);
-  }, [isTaskStatusEmpty, isTaskTitleEmpty, statusExists]);
+  }, [isTaskStatusEmpty, isTaskTitleEmpty, emptySubtaskIndex]);
 
   const handleTaskTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (taskData) {
@@ -85,69 +94,76 @@ export default function AddOrEditTaskModal() {
     }
   };
 
+  const handleTaskDescriptionChange = (
+    e: React.ChangeEvent<HTMLTextAreaElement>
+  ) => {
+    if (taskData) setTaskData({ ...taskData, description: e.target.value });
+  };
+
   const handleTaskStatusChange = (e: React.FormEvent<HTMLSelectElement>) => {
     const target = e.target as HTMLSelectElement;
     if (taskData) setTaskData({ ...taskData, status: target.value });
   };
 
-  const handleAddNewTaskToDb = async (
-    e: React.FormEvent<HTMLButtonElement>
-  ) => {
-    e.preventDefault();
-    const { title, status } = taskData!;
-
-    if (!title) {
-      setIsTaskTitleEmpty(true);
-    }
-
-    if (!status) {
-      setIsTaskStatusEmpty(true);
-    }
-
-    const doesStatusExists = columnNames?.some(
-      (column) => column === taskData?.status
-    );
-
-    if (!doesStatusExists) {
-      setStatusExists(false);
-    }
-
-    if (title && status && doesStatusExists) {
-      if (data) {
-        const [boards] = data;
-        const newData = addOrUpdateTaskToColumnImmutable(
-          boards,
-          currentBoardTitle,
-          status,
-          {
-            id: id(),
-            title: title,
-            status: status,
-          }
-        );
-
-        await updateBoardToDb(newData.boards);
-        closeModal();
-      }
+  const handleAddNewSubtask = () => {
+    const newSubtask = { title: "", isCompleted: false, id: id() };
+    if (taskData) {
+      setTaskData({
+        ...taskData,
+        subtasks: [...taskData.subtasks, newSubtask],
+      });
     }
   };
 
-  const handleEditTaskToDb = async (e: React.FormEvent<HTMLButtonElement>) => {
+  const handleDeleteSubtask = (id: string) => {
+    if (taskData) {
+      const deletedSubtask = taskData.subtasks.filter((subtask) => {
+        const { id: subtaskId } = subtask;
+        return subtaskId !== id;
+      });
+      setTaskData({ ...taskData, subtasks: deletedSubtask });
+    }
+  };
+
+  const handleSubtaskTitleChange = (id: string) => {
+    return function (e: React.ChangeEvent<HTMLInputElement>) {
+      if (taskData) {
+        const updatedSubtaskTitle = taskData.subtasks.map((subtask) => {
+          const { id: subtaskId } = subtask;
+          if (subtaskId === id) {
+            return { ...subtask, title: e.target.value };
+          }
+          return subtask;
+        });
+        setTaskData({ ...taskData, subtasks: updatedSubtaskTitle });
+      }
+    };
+  };
+
+  const handleEditorAddTaskToDb = async (
+    e: React.FormEvent<HTMLButtonElement>
+  ) => {
     e.preventDefault();
-    const { title, status, id } = taskData!;
+    const { title, status, id: taskId, description, subtasks } = taskData!;
+
     if (!title) {
       setIsTaskTitleEmpty(true);
     }
+
     if (!status) {
       setIsTaskStatusEmpty(true);
     }
-    const doesStatusExists = columnNames?.some(
-      (column) => column === taskData?.status
+
+    const emptySubtaskStringChecker = subtasks.some(
+      (subtask) => subtask.title === ""
     );
-    if (!doesStatusExists) {
-      setStatusExists(false);
+
+    if (emptySubtaskStringChecker) {
+      const emptyColumn = subtasks.findIndex((subtask) => subtask.title == "");
+      setEmptySubtaskIndex(emptyColumn);
     }
-    if (title && status && doesStatusExists) {
+
+    if (title && status && !emptySubtaskStringChecker && status != "") {
       if (data) {
         const [boards] = data;
         const newData = addOrUpdateTaskToColumnImmutable(
@@ -155,9 +171,11 @@ export default function AddOrEditTaskModal() {
           currentBoardTitle,
           status,
           {
-            id: id,
+            id: taskId ?? id(),
             title: title,
             status: status,
+            description: description,
+            subtasks: subtasks,
           }
         );
 
@@ -194,6 +212,66 @@ export default function AddOrEditTaskModal() {
             )}
           </div>
 
+          <div className="pt-6">
+            <label className="text-sm">Description</label>
+            <div className="pt-2">
+              <textarea
+                placeholder="e.g. It's always good to take a break. This fifteen minutes break will recharge the batteries a little"
+                value={taskData?.description}
+                onChange={handleTaskDescriptionChange}
+                className={`border focus:outline-none text-sm cursor-pointer w-full p-2 rounded h-16`}
+              />
+            </div>
+          </div>
+
+          <div className="mt-6">
+            <label htmlFor="" className="text-sm">
+              Subtasks
+            </label>
+            {taskData &&
+              taskData.subtasks &&
+              taskData.subtasks.length > 0 &&
+              taskData.subtasks.map((subtask: Subtask, index: number) => {
+                const { id, title } = subtask;
+                return (
+                  <div key={id} className="pt-2">
+                    <div className="flex items-center space-x-2">
+                      <input
+                        value={title}
+                        className={`${
+                          emptySubtaskIndex === index
+                            ? "border-red-500"
+                            : "border-stone-200"
+                        } border border-stone-200 focus:outline-none text-sm cursor-pointer w-full p-2 rounded`}
+                        placeholder="e.g Doing"
+                        onChange={(e) => handleSubtaskTitleChange(id)(e)}
+                      />
+                      <div>
+                        <FaTimes onClick={() => handleDeleteSubtask(id)} />
+                      </div>
+                    </div>
+                    {emptySubtaskIndex === index ? (
+                      <p className="text-xs text-red-500">
+                        Subtask name cannot be empty
+                      </p>
+                    ) : (
+                      ""
+                    )}
+                  </div>
+                );
+              })}
+            <div className="mt-3">
+              <Button
+                variant={"secondary"}
+                type="button"
+                onClick={handleAddNewSubtask}
+                className="rounded-3xl py-2 w-full text-sm font-bold"
+              >
+                <p>+ Add New Subtask</p>
+              </Button>
+            </div>
+          </div>
+
           <div className="mt-3">
             <label htmlFor="status" className="text-sm">
               Status
@@ -212,9 +290,7 @@ export default function AddOrEditTaskModal() {
                 );
               })}
               {taskData?.status === "" ? (
-                <option value="">
-                  Select Status
-                </option>
+                <option value="">Select Status</option>
               ) : (
                 ""
               )}
@@ -223,8 +299,6 @@ export default function AddOrEditTaskModal() {
               <p className="text-xs text-red-500">
                 Task status cannot be empty
               </p>
-            ) : !statusExists ? (
-              <p className="text-xs text-red-500">Column does not exist</p>
             ) : (
               ""
             )}
@@ -232,11 +306,9 @@ export default function AddOrEditTaskModal() {
           <div className="pt-6">
             <Button
               type="submit"
-              onClick={(e: React.FormEvent<HTMLButtonElement>) => {
-                return isVariantAdd
-                  ? handleAddNewTaskToDb(e)
-                  : handleEditTaskToDb(e);
-              }}
+              onClick={(e: React.FormEvent<HTMLButtonElement>) =>
+                handleEditorAddTaskToDb(e)
+              }
               className="rounded-3xl py-2 w-full text-sm font-bold"
             >
               <p>

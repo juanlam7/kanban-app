@@ -77,7 +77,13 @@ export function addOrUpdateTaskToColumnImmutable(
                 // If the task exists in the target column, update it
                 const updatedTasks = column.tasks.map((task) =>
                   task.id === newTask.id
-                    ? { ...task, title: newTask.title, status: newTask.status }
+                    ? {
+                        ...task,
+                        title: newTask.title,
+                        status: newTask.status,
+                        description: newTask.description,
+                        subtasks: newTask.subtasks,
+                      }
                     : task
                 );
                 return { ...column, tasks: updatedTasks };
