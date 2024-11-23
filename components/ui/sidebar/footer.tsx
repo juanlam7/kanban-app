@@ -36,7 +36,7 @@ export default function SidebarFooter({
       } absolute bottom-0 py-6 pr-6 w-full`}
     >
       <div className="pl-6">
-        <div className="h-[3rem] rounded-md flex justify-center items-center space-x-6 bg-accent w-full">
+        <div className="h-[3rem] rounded-md flex justify-center items-center space-x-6 bg-secondary w-full">
           <Image
             src={iconLightTheme}
             alt="board icon"

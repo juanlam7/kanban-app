@@ -45,7 +45,7 @@ export default function Dropdown({ show, setShow }: IDropdown) {
   return (
     <div
       ref={dropdownRef}
-      className="w-48 absolute top-full bg-accent border shadow-lg right-0 py-2 rounded-2xl z-10"
+      className="w-48 absolute top-full bg-secondary shadow-lg right-0 py-2 rounded-2xl z-10"
     >
       <DropdownItem onClick={openEditBoard}>Edit Board</DropdownItem>
       <DropdownItem onClick={openDeleteBoard}>Delete Board</DropdownItem>

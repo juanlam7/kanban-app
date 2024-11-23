@@ -114,7 +114,7 @@ export default function Sidebar() {
         onClick={() => setShowSidebar(!showSidebar)}
         className={`${
           !showSidebar ? "block" : "hidden"
-        } cursor-pointer h-12 w-14 bg-ring transition ease-in 
+        } cursor-pointer h-12 w-14 bg-primary transition ease-in 
         duration-150 delay-150 absolute left-full rounded-tr-full rounded-br-full 
             bottom-4 flex items-center justify-center`}
       >

@@ -37,7 +37,7 @@ const TaskItem = ({ task, index }: TaskItemProps) => {
   };
 
   return (
-    <div className="bg-popover p-6 rounded-md flex items-center justify-between border">
+    <div className="bg-popover p-6 rounded-md flex items-center justify-between shadow-md">
       <p>{task.title}</p>
       <div className="flex items-center">
         <MdEdit
