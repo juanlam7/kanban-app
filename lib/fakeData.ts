@@ -14,12 +14,16 @@ export const data: AllBoards = {
             {
               id: id(),
               title: "Launch version one",
+              description: "",
               status: "backlog",
+              subtasks: [{ id: id(), title: "", isCompleted: false }],
             },
             {
               id: id(),
               title: "Review early feedback and plan next steps for roadmap",
+              description: "",
               status: "backlog",
+              subtasks: [{ id: id(), title: "", isCompleted: false }],
             },
           ],
         },
@@ -35,7 +39,9 @@ export const data: AllBoards = {
             {
               id: id(),
               title: "Review early feedback and plan next steps for roadmap",
+              description: "",
               status: "done",
+              subtasks: [{ id: id(), title: "", isCompleted: false }],
             },
           ],
         },
