@@ -3,7 +3,7 @@ import WrapperForm from "./components/WrapperForm";
 
 export default function LoginPage() {
   return (
-    <AuthLayout title="Welcome Back" subtitle="Login to manage your tasks">
+    <AuthLayout title="Kanban" subtitle="Login to manage your tasks">
       <WrapperForm />
     </AuthLayout>
   );
