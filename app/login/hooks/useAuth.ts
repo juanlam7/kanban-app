@@ -18,11 +18,13 @@ const useAuth = () => {
   const loginToFirebaseWithCredential = async (credential: any) => {
     try {
       await signInWithCredential(auth, credential);
-      router.push("/");
+      router.replace("/");
       router.refresh();
     } catch (error) {
       setErrorMessage("Authentication failed. Please try again.");
       console.error("Error during Firebase authentication:", error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -44,10 +46,9 @@ const useAuth = () => {
 
       toast({ title: "Login Successful" });
     } catch (error: any) {
+      setIsLoading(false);
       setErrorMessage(error.message);
       toast({ title: "Login Failed", description: error.message });
-    } finally {
-      setIsLoading(false);
     }
   };
 
@@ -58,10 +59,9 @@ const useAuth = () => {
       await loginToFirebaseWithCredential(credential);
       toast({ title: "Login Successful" });
     } catch (error: any) {
+      setIsLoading(false);
       setErrorMessage("Authentication failed. Please try again.");
       toast({ title: "Login Failed", description: error.message });
-    } finally {
-      setIsLoading(false);
     }
   };
 

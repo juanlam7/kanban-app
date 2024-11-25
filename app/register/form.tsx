@@ -20,6 +20,9 @@ const FormSchema = z.object({
   username: z.string().min(2, {
     message: "Username must be at least 2 characters.",
   }),
+  email: z.string().email({
+    message: "Invalid email address.",
+  }),
   password: z.string().min(6, {
     message: "Password must be at least 6 characters.",
   }),
@@ -32,12 +35,13 @@ export default function FormPage() {
     resolver: zodResolver(FormSchema),
     defaultValues: {
       username: "",
+      email: "",
       password: "",
     },
   });
 
   const onSubmit = async (data: FormData) => {
-    const { username: email, password } = data;
+    const { username, email, password } = data;
 
     try {
       const response = await fetch("/api/auth/register", {
@@ -45,7 +49,7 @@ export default function FormPage() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ username, email, password }),
       });
       if (!response.ok) {
         throw new Error("Network response was not ok");
@@ -77,6 +81,18 @@ export default function FormPage() {
                 <FormDescription>
                   This is your public display name.
                 </FormDescription>
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="email"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Email</FormLabel>
+                <FormControl>
+                  <Input placeholder="Email" {...field} type="text" />
+                </FormControl>
               </FormItem>
             )}
           />

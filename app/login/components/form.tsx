@@ -24,7 +24,7 @@ const FormSchema = z.object({
 });
 
 const LoginForm = () => {
-  const { isLoading, handleLogin } = useAuth();
+  const { isLoading, handleLogin, errorMessage } = useAuth();
   const form = useForm({
     resolver: zodResolver(FormSchema),
     defaultValues: { email: "", password: "" },
@@ -37,41 +37,44 @@ const LoginForm = () => {
   };
 
   return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="mt-6 space-y-4">
-        <FormField
-          control={form.control}
-          name="email"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Provide email</FormLabel>
-              <FormControl>
-                <Input placeholder="Provide email" {...field} type="text" />
-              </FormControl>
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="password"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Provide Password</FormLabel>
-              <FormControl>
-                <Input placeholder="Password" {...field} type="password" />
-              </FormControl>
-            </FormItem>
-          )}
-        />
-        <Button
-          type="submit"
-          className="w-full bg-cyan-600 text-white rounded hover:bg-cyan-700 transition"
-          disabled={isLoading}
-        >
-          {isLoading ? "Logging in..." : "Login"}
-        </Button>
-      </form>
-    </Form>
+    <>
+      {errorMessage && <p className="text-red-500">{errorMessage}</p>}
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="mt-6 space-y-4">
+          <FormField
+            control={form.control}
+            name="email"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Provide email</FormLabel>
+                <FormControl>
+                  <Input placeholder="Provide email" {...field} type="text" />
+                </FormControl>
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="password"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Provide Password</FormLabel>
+                <FormControl>
+                  <Input placeholder="Password" {...field} type="password" />
+                </FormControl>
+              </FormItem>
+            )}
+          />
+          <Button
+            type="submit"
+            className="w-full bg-cyan-600 text-white rounded hover:bg-cyan-700 transition"
+            disabled={isLoading}
+          >
+            {isLoading ? "Logging in..." : "Login"}
+          </Button>
+        </form>
+      </Form>
+    </>
   );
 };
 
