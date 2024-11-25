@@ -30,41 +30,48 @@ export default function DeleteBoardOrTaskModal() {
   const { data } = useFetchDataFromDbQuery();
   const [updateBoardToDb, { isLoading }] = useUpdateBoardToDbMutation();
 
-  const handleDelete = async (e: React.FormEvent<HTMLButtonElement>) => {
-    e.preventDefault();
-    if (data) {
-      if (modalVariant === "Delete this board?") {
-        if (currentBoardName) {
-          const [boards] = data;
-          const updatedBoards = boards.boards.filter(
-            (board: { name: string }) => board.name !== currentBoardName
-          );
-          await updateBoardToDb(updatedBoards);
-          closeModal();
-        }
-      } else {
-        if (taskIndex !== undefined && taskStatus && currentBoardName) {
-          const [boards] = data;
-          const updatedBoards = boards.boards.map((board: Board) => {
-            if (board.name !== currentBoardName) return board;
+  const handleDeleteBoard = async () => {
+    if (!data || !currentBoardName) return;
 
-            const updatedColumns = board.columns.map((column) => {
-              if (column.name.toLowerCase() !== taskStatus.toLowerCase())
-                return column;
+    const [boards] = data;
+    const updatedBoards = boards.boards.filter(
+      (board: Board) => board.name !== currentBoardName
+    );
 
-              const updatedTasks = column.tasks.filter(
-                (_, index) => index !== taskIndex
-              );
-              return { ...column, tasks: updatedTasks };
-            });
+    await updateBoardToDb(updatedBoards);
+    closeModal();
+  };
 
-            return { ...board, columns: updatedColumns };
-          });
+  const handleDeleteTask = async () => {
+    if (!data || taskIndex === undefined || !taskStatus || !currentBoardName)
+      return;
 
-          await updateBoardToDb(updatedBoards);
-          closeModal();
-        }
-      }
+    const [boards] = data;
+    const updatedBoards = boards.boards.map((board) => {
+      if (board.name !== currentBoardName) return board;
+
+      const updatedColumns = board.columns.map((column) => {
+        if (column.name.toLowerCase() !== taskStatus.toLowerCase())
+          return column;
+
+        const updatedTasks = column.tasks.filter(
+          (_, index) => index !== taskIndex
+        );
+        return { ...column, tasks: updatedTasks };
+      });
+
+      return { ...board, columns: updatedColumns };
+    });
+
+    await updateBoardToDb(updatedBoards);
+    closeModal();
+  };
+
+  const handleDelete = async () => {
+    if (modalVariant === "Delete this board?") {
+      await handleDeleteBoard();
+    } else {
+      await handleDeleteTask();
     }
   };
 
@@ -75,9 +82,8 @@ export default function DeleteBoardOrTaskModal() {
         <div className="pt-6">
           <p className="text-sm text-medium-grey leading-6">
             {modalVariant === "Delete this board?"
-              ? `Are you sure you want to delete the '${currentBoardName}' board? This action will remove all columns
-                and tasks and cannot be reversed.`
-              : `Are you sure you want to delete the '${taskTitle}' tasks? This action cannot be reversed.`}
+              ? `Are you sure you want to delete the '${currentBoardName}' board? This action will remove all columns and tasks and cannot be reversed.`
+              : `Are you sure you want to delete the '${taskTitle}' task? This action cannot be reversed.`}
           </p>
         </div>
         <div className="pt-6 flex space-x-2">
@@ -85,13 +91,10 @@ export default function DeleteBoardOrTaskModal() {
             <Button
               type="submit"
               variant={"destructive"}
-              onClick={(e: React.FormEvent<HTMLButtonElement>) =>
-                handleDelete(e)
-              }
+              onClick={handleDelete}
               className="rounded-3xl py-2 w-full text-sm font-bold"
             >
-              {" "}
-              {isLoading ? "Loading" : "Delete"}
+              {isLoading ? "Loading..." : "Delete"}
             </Button>
           </div>
           <div className="w-1/2">
