@@ -44,7 +44,7 @@ export default function FormPage() {
     const { username, email, password } = data;
 
     try {
-      const response = await fetch("/api/auth/register", {
+      const response = await fetch("../../api/auth/register", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -122,7 +122,7 @@ export default function FormPage() {
         <Button
           disabled={form.formState.isSubmitting}
           variant="link"
-          onClick={() => redirect("/login")}
+          onClick={() => redirect("/es/login")}
         >
           Login here
         </Button>

@@ -1,11 +1,11 @@
 "use client";
 
-import LoginGoogle from "@/app/login/components/LoginGoogle";
 import { Button } from "@/components/ui/button";
 import { useTheme } from "next-themes";
 import { redirect } from "next/navigation";
 import { useEffect } from "react";
 import LoginForm from "./form";
+import LoginGoogle from "./LoginGoogle";
 
 const WrapperForm = () => {
   const { setTheme } = useTheme();
@@ -22,7 +22,7 @@ const WrapperForm = () => {
 
       <p className="mt-4 text-center text-sm text-gray-600">
         Don&apos;t have an account?{" "}
-        <Button variant="link" onClick={() => redirect("/register")}>
+        <Button variant="link" onClick={() => redirect("/es/register")}>
           Sign Up
         </Button>
       </p>
