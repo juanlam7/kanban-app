@@ -1,6 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import LocaleSwitcher from "@/components/ui/LocaleSwitcher";
 import { useTheme } from "next-themes";
 import { redirect } from "next/navigation";
 import { useEffect } from "react";
@@ -18,11 +19,12 @@ const WrapperForm = () => {
 
   return (
     <>
+      <LocaleSwitcher />
       <LoginForm />
 
       <p className="mt-4 text-center text-sm text-gray-600">
         Don&apos;t have an account?{" "}
-        <Button variant="link" onClick={() => redirect("/es/register")}>
+        <Button variant="link" onClick={() => redirect("/register")}>
           Sign Up
         </Button>
       </p>

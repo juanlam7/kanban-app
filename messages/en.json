@@ -1,0 +1,11 @@
+{
+    "LoginPage": {
+      "title": "Kanban",
+      "sub_title": "Login to manage your tasks",
+      "tab_title": "login",
+      "locale": "{locale, select, es {🇪🇸 Spain} en {🇺🇸 English} other {Unknown}}"
+    },
+    "Nav": {
+      "add_new_task": "Add New Task"
+    }
+}

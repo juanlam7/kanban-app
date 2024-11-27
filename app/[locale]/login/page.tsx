@@ -1,9 +1,31 @@
 import AuthLayout from "@/components/ui/AuthLayout";
 import WrapperForm from "./components/WrapperForm";
+import { getTranslations, setRequestLocale } from "next-intl/server";
 
-export default function LoginPage() {
+type RouteParams = Promise<{ locale: string[] }>;
+
+export async function generateMetadata({ params }: { params: RouteParams }) {
+  const { locale } = await params;
+  const t = await getTranslations({
+    locale,
+    namespace: "LoginPage",
+  });
+
+  return {
+    title: t("tab_title"),
+  };
+}
+
+export default async function LoginPage({ params }: { params: RouteParams }) {
+  const { locale } = await params;
+  setRequestLocale(locale[0]);
+  const t = await getTranslations({
+    locale,
+    namespace: "LoginPage",
+  });
+
   return (
-    <AuthLayout title="Kanban" subtitle="Login to manage your tasks">
+    <AuthLayout title={t("title")} subtitle={t("sub_title")}>
       <WrapperForm />
     </AuthLayout>
   );

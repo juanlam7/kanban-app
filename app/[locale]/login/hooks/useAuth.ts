@@ -18,7 +18,7 @@ const useAuth = () => {
   const loginToFirebaseWithCredential = async (credential: any) => {
     try {
       await signInWithCredential(auth, credential);
-      router.replace("/es");
+      router.replace("/");
       router.refresh();
     } catch (error) {
       setErrorMessage("Authentication failed. Please try again.");

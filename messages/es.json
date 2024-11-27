@@ -1,0 +1,11 @@
+{
+    "LoginPage": {
+      "title": "Kanban",
+      "sub_title": "Inicia sesión para administrar tus tareas",
+      "tab_title": "Inicia sessión",
+      "locale": "{locale, select, es {🇪🇸 Spain} en {🇺🇸 English} other {Unknown}}"
+    },
+    "Nav": {
+      "add_new_task": "Añade nueva tarea"
+    }
+}

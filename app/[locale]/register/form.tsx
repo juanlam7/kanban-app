@@ -122,7 +122,7 @@ export default function FormPage() {
         <Button
           disabled={form.formState.isSubmitting}
           variant="link"
-          onClick={() => redirect("/es/login")}
+          onClick={() => redirect("/login")}
         >
           Login here
         </Button>
