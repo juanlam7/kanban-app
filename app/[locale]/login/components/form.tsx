@@ -13,6 +13,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import useAuth from "../hooks/useAuth";
+import { useTranslations } from "next-intl";
 
 const FormSchema = z.object({
   email: z.string().email({
@@ -29,6 +30,7 @@ const LoginForm = () => {
     resolver: zodResolver(FormSchema),
     defaultValues: { email: "", password: "" },
   });
+  const t = useTranslations("LoginPage");
 
   const onSubmit = async (data: { email: string; password: string }) => {
     await handleLogin(data.email, data.password);
@@ -46,9 +48,13 @@ const LoginForm = () => {
             name="email"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Provide email</FormLabel>
+                <FormLabel>{t("provide_email")}</FormLabel>
                 <FormControl>
-                  <Input placeholder="Provide email" {...field} type="text" />
+                  <Input
+                    placeholder={t("provide_email")}
+                    {...field}
+                    type="text"
+                  />
                 </FormControl>
               </FormItem>
             )}
@@ -58,9 +64,13 @@ const LoginForm = () => {
             name="password"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Provide Password</FormLabel>
+                <FormLabel>{t("provide_password")}</FormLabel>
                 <FormControl>
-                  <Input placeholder="Password" {...field} type="password" />
+                  <Input
+                    placeholder={t("provide_password")}
+                    {...field}
+                    type="password"
+                  />
                 </FormControl>
               </FormItem>
             )}
@@ -70,7 +80,7 @@ const LoginForm = () => {
             className="w-full bg-cyan-600 text-white rounded hover:bg-cyan-700 transition"
             disabled={isLoading}
           >
-            {isLoading ? "Logging in..." : "Login"}
+            {isLoading ? t("logging") : t("login")}
           </Button>
         </form>
       </Form>

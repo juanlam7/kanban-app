@@ -12,6 +12,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { toast } from "@/components/ui/use-toast";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useTranslations } from "next-intl";
 import { redirect } from "next/navigation";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
@@ -31,6 +32,7 @@ const FormSchema = z.object({
 type FormData = z.infer<typeof FormSchema>;
 
 export default function FormPage() {
+  const t = useTranslations("RegisterPage");
   const form = useForm({
     resolver: zodResolver(FormSchema),
     defaultValues: {
@@ -74,13 +76,11 @@ export default function FormPage() {
             name="username"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Username</FormLabel>
+                <FormLabel>{t("username")}</FormLabel>
                 <FormControl>
-                  <Input placeholder="Username" {...field} />
+                  <Input placeholder={t("username")} {...field} />
                 </FormControl>
-                <FormDescription>
-                  This is your public display name.
-                </FormDescription>
+                <FormDescription>{t("public_display_name")}</FormDescription>
               </FormItem>
             )}
           />
@@ -89,9 +89,9 @@ export default function FormPage() {
             name="email"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Email</FormLabel>
+                <FormLabel>{t("email")}</FormLabel>
                 <FormControl>
-                  <Input placeholder="Email" {...field} type="text" />
+                  <Input placeholder={t("email")} {...field} type="text" />
                 </FormControl>
               </FormItem>
             )}
@@ -101,9 +101,9 @@ export default function FormPage() {
             name="password"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Password</FormLabel>
+                <FormLabel>{t("password")}</FormLabel>
                 <FormControl>
-                  <Input placeholder="Password" {...field} type="password" />
+                  <Input placeholder={t("password")} {...field} type="password" />
                 </FormControl>
               </FormItem>
             )}
@@ -113,18 +113,18 @@ export default function FormPage() {
             type="submit"
             className="w-full bg-cyan-600 text-white rounded hover:bg-cyan-700 transition"
           >
-            {form.formState.isSubmitting ? "Sign in...." : "Register"}
+            {form.formState.isSubmitting ? t("sign_in") : t("register")}
           </Button>
         </form>
       </Form>
       <p className="mt-4 text-center text-sm text-gray-600">
-        Already have an account?{" "}
+        {t("already_have_account")}
         <Button
           disabled={form.formState.isSubmitting}
           variant="link"
           onClick={() => redirect("/login")}
         >
-          Login here
+          {t("login_here")}
         </Button>
       </p>
     </>

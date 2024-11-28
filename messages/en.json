@@ -2,8 +2,29 @@
     "LoginPage": {
       "title": "Kanban",
       "sub_title": "Login to manage your tasks",
-      "tab_title": "login",
-      "locale": "{locale, select, es {🇪🇸 Spain} en {🇺🇸 English} other {Unknown}}"
+      "tab_title": "Login",
+      "locale": "{locale, select, es {🇪🇸} en {🇺🇸} other {Unknown}}",
+      "provide_email": "Provide email",
+      "provide_password": "Provide password",
+      "login": "Login",
+      "logging": "Logging in...",
+      "dont_have_account": "Don't have an account?",
+      "sign_up": "Sign Up",
+      "or": "OR",
+      "continue_google": "Continue with Google"
+    },
+    "RegisterPage": {
+      "title": "Create an account",
+      "sub_title": "Start managing your tasks today",
+      "tab_title": "Sign up",
+      "username":"Username",
+      "email":"Email",
+      "password":"Password",
+      "public_display_name":"This is your public display name",
+      "already_have_account": "Already have an account?",
+      "sign_in": "Sign in....",
+      "register": "Register",
+      "login_here": "Login here"
     },
     "Nav": {
       "add_new_task": "Add New Task"

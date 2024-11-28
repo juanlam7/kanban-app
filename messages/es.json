@@ -3,7 +3,28 @@
       "title": "Kanban",
       "sub_title": "Inicia sesión para administrar tus tareas",
       "tab_title": "Inicia sessión",
-      "locale": "{locale, select, es {🇪🇸 Spain} en {🇺🇸 English} other {Unknown}}"
+      "locale": "{locale, select, es {🇪🇸} en {🇺🇸} other {Unknown}}",
+      "provide_email": "Ingresar correo electrónico",
+      "provide_password": "Ingresar contraseña",
+      "login": "Iniciar sessión",
+      "logging": "Iniciando...",
+      "dont_have_account": "No tienes una cuenta?",
+      "sign_up": "Registrate",
+      "or": "O",
+      "continue_google": "Continua con Google"
+    },
+    "RegisterPage": {
+      "title": "Crea una cuenta",
+      "sub_title": "Empieza a administrar tus tareas hoy",
+      "tab_title": "Registro",
+      "username": "Usuario",
+      "email": "Correo electrónico",
+      "password": "Contraseña",
+      "public_display_name": "Este es tu nombre público para mostrar",
+      "already_have_account": "Ya tienes una cuenta?",
+      "sign_in": "Registrando...",
+      "register": "Registrar",
+      "login_here": "Inicia sessión aquí"
     },
     "Nav": {
       "add_new_task": "Añade nueva tarea"
