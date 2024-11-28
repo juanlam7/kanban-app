@@ -17,6 +17,7 @@ import {
 } from "@/redux/services/apiSlice";
 import { Modal, ModalBody } from "../ui/Modal";
 import { Button } from "../ui/button";
+import { useTranslations } from "next-intl";
 
 export default function DeleteBoardOrTaskModal() {
   const dispatch = useAppDispatch();
@@ -29,6 +30,7 @@ export default function DeleteBoardOrTaskModal() {
   const taskStatus = useAppSelector(getDeleteBoardAndTaskModalStatus);
   const { data } = useFetchDataFromDbQuery();
   const [updateBoardToDb, { isLoading }] = useUpdateBoardToDbMutation();
+  const t = useTranslations();
 
   const handleDeleteBoard = async () => {
     if (!data || !currentBoardName) return;
@@ -82,8 +84,10 @@ export default function DeleteBoardOrTaskModal() {
         <div className="pt-6">
           <p className="text-sm text-medium-grey leading-6">
             {modalVariant === "Delete this board?"
-              ? `Are you sure you want to delete the '${currentBoardName}' board? This action will remove all columns and tasks and cannot be reversed.`
-              : `Are you sure you want to delete the '${taskTitle}' task? This action cannot be reversed.`}
+              ? t("delete_board_confirmation", {
+                  boardName: `"${currentBoardName}"`,
+                })
+              : t("delete_task_confirmation", { taskTitle: `"${taskTitle}"` })}
           </p>
         </div>
         <div className="pt-6 flex space-x-2">
@@ -94,7 +98,7 @@ export default function DeleteBoardOrTaskModal() {
               onClick={handleDelete}
               className="rounded-3xl py-2 w-full text-sm font-bold"
             >
-              {isLoading ? "Loading..." : "Delete"}
+              {isLoading ? `${t('loading')}...` : t('delete')}
             </Button>
           </div>
           <div className="w-1/2">
@@ -103,7 +107,7 @@ export default function DeleteBoardOrTaskModal() {
               onClick={closeModal}
               className="rounded-3xl py-2 w-full text-sm font-bold"
             >
-              Cancel
+              {t('cancel')}
             </Button>
           </div>
         </div>

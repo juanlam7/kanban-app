@@ -13,7 +13,7 @@ import Dropdown from "./Dropdown";
 export default function Navbar() {
   const [show, setShow] = useState<boolean>(false);
   const dispatch = useAppDispatch();
-  const t = useTranslations("Nav");
+  const t = useTranslations();
 
   const currentBoardName = useAppSelector(getCurrentBoardName);
 

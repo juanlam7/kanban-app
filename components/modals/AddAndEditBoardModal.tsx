@@ -23,6 +23,7 @@ import {
   useUpdateBoardToDbMutation,
 } from "@/redux/services/apiSlice";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useTranslations } from "next-intl";
 import { useEffect } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { FaTimes } from "react-icons/fa";
@@ -50,6 +51,7 @@ export default function AddAndEditBoardModal() {
   const modalVariant = useAppSelector(getAddAndEditBoardModalVariantValue);
   const isVariantAdd = modalVariant === "Add New Board";
   const activeBoardIndex = useAppSelector(getActiveBoardIndex);
+  const t = useTranslations();
 
   const { data } = useFetchDataFromDbQuery();
   const [updateBoardToDb, { isLoading }] = useUpdateBoardToDbMutation();
@@ -114,9 +116,9 @@ export default function AddAndEditBoardModal() {
               name="name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Board Name</FormLabel>
+                  <FormLabel>{t("board_name")}</FormLabel>
                   <FormControl>
-                    <Input placeholder="Board Name" {...field} />
+                    <Input placeholder={t("board_name")} {...field} />
                   </FormControl>
                 </FormItem>
               )}
@@ -133,11 +135,11 @@ export default function AddAndEditBoardModal() {
                     name={`columns.${index}.name`}
                     render={({ field }) => (
                       <FormItem>
-                        {index === 0 && <FormLabel>Columns</FormLabel>}
+                        {index === 0 && <FormLabel>{t("columns")}</FormLabel>}
                         <FormControl>
                           <Input
                             className="md:min-w-96"
-                            placeholder="Column Name"
+                            placeholder={t("column_name")}
                             {...field}
                           />
                         </FormControl>
@@ -160,15 +162,15 @@ export default function AddAndEditBoardModal() {
               onClick={() => append({ id: id(), name: "", tasks: [] })}
               className="w-full"
             >
-              + Add New Column
+              + {t("add_new_column")}
             </Button>
 
             <Button type="submit" className="w-full mt-5">
               {isLoading
-                ? "Saving..."
+                ? t("saving")
                 : isVariantAdd
-                ? "Create Board"
-                : "Save Changes"}
+                ? t("create_board")
+                : t("save_changes")}
             </Button>
           </form>
         </Form>

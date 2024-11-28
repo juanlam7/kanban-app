@@ -27,6 +27,7 @@ import { arrayMove, sortableKeyboardCoordinates } from "@dnd-kit/sortable";
 import { useEffect, useState } from "react";
 import BoardSection from "./BoardSection";
 import TaskItem from "./TaskItem";
+import { useTranslations } from "next-intl";
 
 interface BoardSectionListProps {
   AddColumn: () => void;
@@ -45,6 +46,7 @@ const BoardSectionList = ({
   const [activeTaskId, setActiveTaskId] = useState<null | string>(null);
   const [currentBoard, setCurrentBoard] = useState<Board>();
   const activeBoardIndex = useAppSelector(getActiveBoardIndex);
+  const t = useTranslations();
 
   const sensors = useSensors(
     useSensor(PointerSensor),
@@ -208,7 +210,7 @@ const BoardSectionList = ({
               onClick={AddColumn}
               className="rounded-md bg-popover w-[17.5rem] mt-12 shrink-0 flex justify-center items-center cursor-pointer"
             >
-              <p className="font-bold text-2xl">+ New Column</p>
+              <p className="font-bold text-2xl">+ {t("new_column")}</p>
             </div>
           )}
         <DragOverlay dropAnimation={dropAnimation}>
