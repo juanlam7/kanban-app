@@ -1,26 +1,38 @@
 "use client";
 
+import { BoardModalVariantEnum } from "@/lib/enums";
+import { Board } from "@/lib/types";
 import {
   getActiveBoardIndex,
   getCurrentBoardName,
   openAddAndEditBoardModal,
 } from "@/redux/features/appSlice";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
-import { useFetchDataFromDbQuery } from "@/redux/services/apiSlice";
-import { useEffect, useState } from "react";
-import BoardSectionList from "./BoardSectionList";
-import { Board } from "@/lib/types";
-import { Button } from "../ui/button";
+import {
+  useAddInitialBoardToDbMutation,
+  useFetchDataFromDbQuery,
+} from "@/redux/services/apiSlice";
 import { useTranslations } from "next-intl";
-import { BoardModalVariantEnum } from "@/lib/enums";
+import { useEffect, useState } from "react";
+import { Button } from "../ui/button";
+import BoardSectionList from "./BoardSectionList";
 
 const WrapperBoard = () => {
   const { data, isLoading } = useFetchDataFromDbQuery();
+  const [addInitialBoardToDb] = useAddInitialBoardToDbMutation();
   const currentBoardTitle = useAppSelector(getCurrentBoardName);
   const activeBoardIndex = useAppSelector(getActiveBoardIndex);
   const [activeBoards, setActiveBoards] = useState<Board[]>([]);
   const dispatch = useAppDispatch();
   const t = useTranslations();
+
+  useEffect(() => {
+    if (!data || !data[0]?.boards) {
+      addInitialBoardToDb();
+      return;
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     if (data) {
