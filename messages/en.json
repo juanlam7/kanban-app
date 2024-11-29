@@ -63,5 +63,6 @@
     "delete": "Delete",
     "loading": "Loading",
     "cancel": "Cancel",
-    "completed": "completed"
+    "completed": "completed",
+    "create_first_board": "Create your first board!"
 }

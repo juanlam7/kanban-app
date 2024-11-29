@@ -242,6 +242,7 @@ export default function AddOrEditTaskModal() {
             </div>
 
             <Button
+              variant="secondary"
               className="!mt-1"
               type="button"
               onClick={() =>

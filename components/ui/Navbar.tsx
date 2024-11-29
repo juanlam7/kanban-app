@@ -28,7 +28,7 @@ export default function Navbar() {
         <p className="text-2xl font-bold pl-6">
           {currentBoardName.length > 0
             ? currentBoardName
-            : "Create your first board!"}
+            : t('create_first_board')}
         </p>
 
         <div className="flex items-center space-x-3">

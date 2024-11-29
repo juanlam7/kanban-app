@@ -63,5 +63,6 @@
     "delete": "Eliminar",
     "loading": "Cargando",
     "cancel": "Cancelar",
-    "completed": "completados"
+    "completed": "completados",
+    "create_first_board": "Crea tu primer tablero!"
 }

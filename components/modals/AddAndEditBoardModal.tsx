@@ -168,6 +168,7 @@ export default function AddAndEditBoardModal() {
             </div>
 
             <Button
+              variant="secondary"
               type="button"
               onClick={() => append({ id: id(), name: "", tasks: [] })}
               className="w-full"
