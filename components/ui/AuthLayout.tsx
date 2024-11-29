@@ -1,3 +1,5 @@
+import LocaleSwitcher from "./LocaleSwitcher";
+
 interface AuthLayoutProps {
   title: string;
   subtitle: string;
@@ -24,6 +26,9 @@ export default function AuthLayout({
         </div>
       </div>
       <div className="relative w-full max-w-md bg-slate-200 backdrop-blur-md p-6 text-center">
+        <div className="text-right">
+          <LocaleSwitcher />
+        </div>
         <h2 className="text-3xl font-bold text-gray-800">{title}</h2>
         <p className="text-gray-600">{subtitle}</p>
         {children}

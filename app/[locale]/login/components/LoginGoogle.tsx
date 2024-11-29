@@ -4,9 +4,11 @@ import { Button } from "@/components/ui/button";
 import { getSession, signIn } from "next-auth/react";
 import { useEffect } from "react";
 import useAuth from "../hooks/useAuth";
+import { useTranslations } from "next-intl";
 
 const LoginGoogle = () => {
   const { isLoading, handleGoogleLogin, errorMessage } = useAuth();
+  const t = useTranslations("LoginPage");
 
   useEffect(() => {
     const initLogin = async () => {
@@ -32,7 +34,7 @@ const LoginGoogle = () => {
     <>
       {errorMessage && <p className="text-red-500">{errorMessage}</p>}
       <Button variant="destructive" className="mt-4" onClick={handleSignIn}>
-        {isLoading ? "Logging in..." : "Continue with Google"}
+        {isLoading ? t("logging") : t("continue_google")}
       </Button>
     </>
   );

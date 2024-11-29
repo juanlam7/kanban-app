@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Modal, ModalBody } from "@/components/ui/Modal";
+import { TaskModalVariantEnum } from "@/lib/enums";
 import { addOrUpdateTaskToColumnImmutable, id } from "@/lib/utils";
 import {
   closeAddAndEditTaskModal,
@@ -25,10 +26,16 @@ import {
   useUpdateBoardToDbMutation,
 } from "@/redux/services/apiSlice";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useTranslations } from "next-intl";
 import { useEffect } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { FaTimes } from "react-icons/fa";
 import * as z from "zod";
+
+const modalVariantTranslations = {
+  [TaskModalVariantEnum.AddNewTask]: "add_new_task",
+  [TaskModalVariantEnum.EditTask]: "edit_task",
+};
 
 const TaskSchema = z.object({
   id: z.string().optional(),
@@ -51,12 +58,14 @@ type TaskFormValues = z.infer<typeof TaskSchema>;
 export default function AddOrEditTaskModal() {
   const dispatch = useAppDispatch();
   const isModalOpen = useAppSelector(getAddAndEditTaskModalValue);
-  const modalVariant = useAppSelector(getAddAndEditTaskModalVariantValue);
-  const isVariantAdd = modalVariant === "Add New Task";
+  const modalVariant = useAppSelector(
+    getAddAndEditTaskModalVariantValue
+  ) as TaskModalVariantEnum;
+  const isVariantAdd = modalVariant === TaskModalVariantEnum.AddNewTask;
   const currentTaskTitle = useAppSelector(getAddAndEditTaskModalTitle);
   const activeBoardIndex = useAppSelector(getActiveBoardIndex);
   const currentBoardTitle = useAppSelector(getCurrentBoardName);
-
+  const t = useTranslations();
   const { data } = useFetchDataFromDbQuery();
   const [updateBoardToDb, { isLoading }] = useUpdateBoardToDbMutation();
 
@@ -135,7 +144,9 @@ export default function AddOrEditTaskModal() {
   return (
     <Modal isOpen={isModalOpen} onRequestClose={closeModal}>
       <ModalBody>
-        <p className="font-bold text-lg">{modalVariant}</p>
+        <p className="font-bold text-lg">
+          {modalVariant.length > 0 && t(modalVariantTranslations[modalVariant])}
+        </p>
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}
@@ -146,9 +157,9 @@ export default function AddOrEditTaskModal() {
               name="title"
               render={({ field }) => (
                 <FormItem className="!mt-2">
-                  <FormLabel>Title</FormLabel>
+                  <FormLabel>{t("title")}</FormLabel>
                   <FormControl>
-                    <Input placeholder="Task Title" {...field} />
+                    <Input placeholder={t("task_title")} {...field} />
                   </FormControl>
                 </FormItem>
               )}
@@ -159,10 +170,10 @@ export default function AddOrEditTaskModal() {
               name="description"
               render={({ field }) => (
                 <FormItem className="!mt-2">
-                  <FormLabel>Description</FormLabel>
+                  <FormLabel>{t("description")}</FormLabel>
                   <FormControl>
                     <textarea
-                      placeholder="Task Description"
+                      placeholder={t("task_description")}
                       {...field}
                       className="border bg-background hide-scrollbar p-2 w-full rounded text-sm h-16"
                     />
@@ -199,19 +210,19 @@ export default function AddOrEditTaskModal() {
                       <FormItem>
                         {index === 0 && (
                           <FormLabel>
-                            Subtasks (
+                            {t("subtasks")} (
                             {
                               fields?.filter(
                                 (subtask) => subtask?.isCompleted === true
                               ).length
                             }{" "}
-                            of {fields?.length})
+                            {t("of")} {fields?.length})
                           </FormLabel>
                         )}
 
                         <FormControl>
                           <Input
-                            placeholder="Subtask Title"
+                            placeholder={t("subtask_title")}
                             {...field}
                             className="md:min-w-80"
                           />
@@ -237,7 +248,7 @@ export default function AddOrEditTaskModal() {
                 append({ id: id(), title: "", isCompleted: false })
               }
             >
-              + Add Subtask
+              + {t("add_subtask")}
             </Button>
 
             <FormField
@@ -245,14 +256,14 @@ export default function AddOrEditTaskModal() {
               name="status"
               render={({ field }) => (
                 <FormItem className="!mt-2">
-                  <FormLabel>Status</FormLabel>
+                  <FormLabel>{t("status")}</FormLabel>
                   <FormControl>
                     <select
                       {...field}
                       className="border bg-background p-2 w-full rounded text-sm"
                     >
                       <option value="" disabled>
-                        Select Status
+                        {t("select_status")}
                       </option>
                       {data &&
                         data[0]?.boards[activeBoardIndex]?.columns.map(
@@ -270,10 +281,10 @@ export default function AddOrEditTaskModal() {
 
             <Button type="submit" className="w-full rounded transition">
               {isLoading
-                ? "Saving..."
+                ? t("saving")
                 : isVariantAdd
-                ? "Create Task"
-                : "Save Changes"}
+                ? t("create_task")
+                : t("save_changes")}
             </Button>
           </form>
         </Form>

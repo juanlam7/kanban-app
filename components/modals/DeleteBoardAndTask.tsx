@@ -15,20 +15,28 @@ import {
   useFetchDataFromDbQuery,
   useUpdateBoardToDbMutation,
 } from "@/redux/services/apiSlice";
+import { useTranslations } from "next-intl";
 import { Modal, ModalBody } from "../ui/Modal";
 import { Button } from "../ui/button";
+import { DeleteModalVariantEnum } from "@/lib/enums";
+
+const modalVariantTranslations = {
+  [DeleteModalVariantEnum.DeleteBoard]: "delete_this_board",
+  [DeleteModalVariantEnum.DeleteTask]: "delete_this_task",
+};
 
 export default function DeleteBoardOrTaskModal() {
   const dispatch = useAppDispatch();
   const isModalOpen = useAppSelector(getDeleteBoardAndTaskModalValue);
   const closeModal = () => dispatch(closeDeleteBoardAndTaskModal());
   const currentBoardName = useAppSelector(getCurrentBoardName);
-  const modalVariant = useAppSelector(getDeleteBoardAndTaskModalVariantValue);
+  const modalVariant = useAppSelector(getDeleteBoardAndTaskModalVariantValue) as DeleteModalVariantEnum;
   const taskTitle = useAppSelector(getDeleteBoardAndTaskModalTitle);
   const taskIndex = useAppSelector(getDeleteBoardAndTaskModalIndex);
   const taskStatus = useAppSelector(getDeleteBoardAndTaskModalStatus);
   const { data } = useFetchDataFromDbQuery();
   const [updateBoardToDb, { isLoading }] = useUpdateBoardToDbMutation();
+  const t = useTranslations();
 
   const handleDeleteBoard = async () => {
     if (!data || !currentBoardName) return;
@@ -68,7 +76,7 @@ export default function DeleteBoardOrTaskModal() {
   };
 
   const handleDelete = async () => {
-    if (modalVariant === "Delete this board?") {
+    if (modalVariant === DeleteModalVariantEnum.DeleteBoard) {
       await handleDeleteBoard();
     } else {
       await handleDeleteTask();
@@ -78,12 +86,16 @@ export default function DeleteBoardOrTaskModal() {
   return (
     <Modal isOpen={isModalOpen} onRequestClose={closeModal}>
       <ModalBody>
-        <p className="text-red font-bold text-lg">{modalVariant}</p>
+        <p className="text-red font-bold text-lg">
+          {modalVariant.length > 0 && t(modalVariantTranslations[modalVariant])}
+        </p>
         <div className="pt-6">
           <p className="text-sm text-medium-grey leading-6">
-            {modalVariant === "Delete this board?"
-              ? `Are you sure you want to delete the '${currentBoardName}' board? This action will remove all columns and tasks and cannot be reversed.`
-              : `Are you sure you want to delete the '${taskTitle}' task? This action cannot be reversed.`}
+            {modalVariant === DeleteModalVariantEnum.DeleteBoard
+              ? t("delete_board_confirmation", {
+                  boardName: `"${currentBoardName}"`,
+                })
+              : t("delete_task_confirmation", { taskTitle: `"${taskTitle}"` })}
           </p>
         </div>
         <div className="pt-6 flex space-x-2">
@@ -94,7 +106,7 @@ export default function DeleteBoardOrTaskModal() {
               onClick={handleDelete}
               className="rounded-3xl py-2 w-full text-sm font-bold"
             >
-              {isLoading ? "Loading..." : "Delete"}
+              {isLoading ? `${t("loading")}...` : t("delete")}
             </Button>
           </div>
           <div className="w-1/2">
@@ -103,7 +115,7 @@ export default function DeleteBoardOrTaskModal() {
               onClick={closeModal}
               className="rounded-3xl py-2 w-full text-sm font-bold"
             >
-              Cancel
+              {t("cancel")}
             </Button>
           </div>
         </div>

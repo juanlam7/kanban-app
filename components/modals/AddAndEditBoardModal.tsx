@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Modal, ModalBody } from "@/components/ui/Modal";
+import { BoardModalVariantEnum } from "@/lib/enums";
 import { id } from "@/lib/utils";
 import {
   closeAddAndEditBoardModal,
@@ -23,10 +24,16 @@ import {
   useUpdateBoardToDbMutation,
 } from "@/redux/services/apiSlice";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useTranslations } from "next-intl";
 import { useEffect } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { FaTimes } from "react-icons/fa";
 import * as z from "zod";
+
+const modalVariantTranslations = {
+  [BoardModalVariantEnum.AddNewBoard]: "add_new_board",
+  [BoardModalVariantEnum.EditBoard]: "edit_board",
+};
 
 const BoardSchema = z.object({
   id: z.string().optional(),
@@ -47,9 +54,12 @@ type BoardFormValues = z.infer<typeof BoardSchema>;
 export default function AddAndEditBoardModal() {
   const dispatch = useAppDispatch();
   const isOpen = useAppSelector(getAddAndEditBoardModalValue);
-  const modalVariant = useAppSelector(getAddAndEditBoardModalVariantValue);
-  const isVariantAdd = modalVariant === "Add New Board";
+  const modalVariant = useAppSelector(
+    getAddAndEditBoardModalVariantValue
+  ) as BoardModalVariantEnum;
+  const isVariantAdd = modalVariant === BoardModalVariantEnum.AddNewBoard;
   const activeBoardIndex = useAppSelector(getActiveBoardIndex);
+  const t = useTranslations();
 
   const { data } = useFetchDataFromDbQuery();
   const [updateBoardToDb, { isLoading }] = useUpdateBoardToDbMutation();
@@ -103,7 +113,9 @@ export default function AddAndEditBoardModal() {
   return (
     <Modal isOpen={isOpen} onRequestClose={closeModal}>
       <ModalBody>
-        <p className="font-bold text-lg">{modalVariant}</p>
+        <p className="font-bold text-lg">
+          {modalVariant.length > 0 && t(modalVariantTranslations[modalVariant])}
+        </p>
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}
@@ -114,9 +126,9 @@ export default function AddAndEditBoardModal() {
               name="name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Board Name</FormLabel>
+                  <FormLabel>{t("board_name")}</FormLabel>
                   <FormControl>
-                    <Input placeholder="Board Name" {...field} />
+                    <Input placeholder={t("board_name")} {...field} />
                   </FormControl>
                 </FormItem>
               )}
@@ -133,11 +145,11 @@ export default function AddAndEditBoardModal() {
                     name={`columns.${index}.name`}
                     render={({ field }) => (
                       <FormItem>
-                        {index === 0 && <FormLabel>Columns</FormLabel>}
+                        {index === 0 && <FormLabel>{t("columns")}</FormLabel>}
                         <FormControl>
                           <Input
                             className="md:min-w-96"
-                            placeholder="Column Name"
+                            placeholder={t("column_name")}
                             {...field}
                           />
                         </FormControl>
@@ -160,15 +172,15 @@ export default function AddAndEditBoardModal() {
               onClick={() => append({ id: id(), name: "", tasks: [] })}
               className="w-full"
             >
-              + Add New Column
+              + {t("add_new_column")}
             </Button>
 
             <Button type="submit" className="w-full mt-5">
               {isLoading
-                ? "Saving..."
+                ? t("saving")
                 : isVariantAdd
-                ? "Create Board"
-                : "Save Changes"}
+                ? t("create_board")
+                : t("save_changes")}
             </Button>
           </form>
         </Form>

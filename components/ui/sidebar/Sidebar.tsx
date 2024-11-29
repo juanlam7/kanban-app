@@ -15,10 +15,12 @@ import { useEffect, useState } from "react";
 import iconShowSidebar from "../../../public/icon-show-sidebar.svg";
 import { Button } from "../button";
 import SidebarFooter from "./Footer";
+import { useTranslations } from "next-intl";
+import { BoardModalVariantEnum } from "@/lib/enums";
 
 export default function Sidebar() {
   const [showSidebar, setShowSidebar] = useState<boolean>(true);
-
+  const t = useTranslations();
   const { data } = useFetchDataFromDbQuery();
   const dispatch = useAppDispatch();
   const currentBoardName = useAppSelector(getCurrentBoardName);
@@ -75,7 +77,7 @@ export default function Sidebar() {
         {data && (
           <>
             <p className="pl-[2.12rem] text-[.95rem] font-semibold uppercase pb-3">
-              {`All Boards (${data[0]?.boards.length ?? 0})`}
+              {`${t("all_boards")} (${data[0]?.boards.length ?? 0})`}
             </p>
             {data[0]?.boards.map((board: Board, index: number) => {
               const { name, id } = board;
@@ -97,12 +99,12 @@ export default function Sidebar() {
           </>
         )}
         <Button
-          onClick={() => dispatch(openAddAndEditBoardModal("Add New Board"))}
+          onClick={() => dispatch(openAddAndEditBoardModal(BoardModalVariantEnum.AddNewBoard))}
           variant="ghost"
           className="flex items-center space-x-2 pl-[2.12rem] py-3"
         >
           <p className="text-base font-bold capitalize text-primary">
-            + Create New Board
+            + {t("create_new_board")}
           </p>
         </Button>
         <SidebarFooter

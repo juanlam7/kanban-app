@@ -1,10 +1,12 @@
 "use client";
 
+import { TaskModalVariantEnum } from "@/lib/enums";
 import {
   getCurrentBoardName,
   openAddAndEditTaskModal,
 } from "@/redux/features/appSlice";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
+import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { Button } from "./button";
 import Dropdown from "./Dropdown";
@@ -12,6 +14,7 @@ import Dropdown from "./Dropdown";
 export default function Navbar() {
   const [show, setShow] = useState<boolean>(false);
   const dispatch = useAppDispatch();
+  const t = useTranslations();
 
   const currentBoardName = useAppSelector(getCurrentBoardName);
 
@@ -23,17 +26,23 @@ export default function Navbar() {
 
       <div className="flex justify-between w-full items-center pr-[2.12rem]">
         <p className="text-2xl font-bold pl-6">
-          {currentBoardName.length > 0 ? currentBoardName : "Create your first board!"}
+          {currentBoardName.length > 0
+            ? currentBoardName
+            : "Create your first board!"}
         </p>
 
         <div className="flex items-center space-x-3">
           <Button
             onClick={() =>
-              dispatch(openAddAndEditTaskModal({ variant: "Add New Task" }))
+              dispatch(
+                openAddAndEditTaskModal({
+                  variant: TaskModalVariantEnum.AddNewTask,
+                })
+              )
             }
             className="px-4 py-2 flex items-center"
           >
-            <p>+ Add New Task</p>
+            <p>+ {t("add_new_task")}</p>
           </Button>
           <div className="relative flex items-center">
             <Button
