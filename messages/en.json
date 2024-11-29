@@ -27,8 +27,12 @@
       "login_here": "Login here"
     },
     "add_new_task": "Add new task",
+    "edit_task": "Edit task",
+    "delete_this_task": "Delete this task?",
+    "add_new_board": "Add new board",
     "edit_board": "Edit board",
     "delete_board": "Delete board",
+    "delete_this_board": "Delete this board?",
     "title": "Title",
     "task_title": "Task title",
     "description": "Description",
@@ -58,5 +62,6 @@
     "delete_task_confirmation": "Are you sure you want to delete the {taskTitle} task? This action cannot be reversed.",
     "delete": "Delete",
     "loading": "Loading",
-    "cancel": "Cancel"
+    "cancel": "Cancel",
+    "completed": "completed"
 }

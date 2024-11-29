@@ -27,8 +27,12 @@
       "login_here": "Inicia sesión aquí"
     },
     "add_new_task": "Añade nueva tarea",
+    "edit_task": "Editar tarea",
+    "delete_this_task": "Eliminar esta tarea?",
+    "add_new_board": "Añade nuevo tablero",
     "edit_board": "Editar tablero",
     "delete_board": "Borrar tablero",
+    "delete_this_board": "Eliminar este tablero?",
     "title": "Título",
     "task_title": "Título de la tarea",
     "description": "Descripción",
@@ -58,5 +62,6 @@
     "delete_task_confirmation": "Estas seguro que quieres eliminar la tarea {taskTitle}? Esta acción no se puede revertir.",
     "delete": "Eliminar",
     "loading": "Cargando",
-    "cancel": "Cancelar"
+    "cancel": "Cancelar",
+    "completed": "completados"
 }

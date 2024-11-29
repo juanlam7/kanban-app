@@ -4,6 +4,7 @@ import {
   openDeleteBoardAndTaskModal,
 } from "@/redux/features/appSlice";
 import { useAppDispatch } from "@/redux/hooks";
+import { useTranslations } from "next-intl";
 import { MdDelete, MdEdit } from "react-icons/md";
 
 type TaskItemProps = {
@@ -13,6 +14,7 @@ type TaskItemProps = {
 
 const TaskItem = ({ task, index }: TaskItemProps) => {
   const dispatch = useAppDispatch();
+  const t = useTranslations();
 
   const onEdit = (columnName: string, index: number, title: string) => {
     dispatch(
@@ -38,7 +40,13 @@ const TaskItem = ({ task, index }: TaskItemProps) => {
 
   return (
     <div className="bg-popover p-6 rounded-md flex items-center justify-between shadow-md">
-      <p>{task.title}</p>
+      <div>
+        <p>{task.title}</p>
+        <p className="text-xs text-gray-400 mt-4">
+          {task.subtasks?.filter((item) => item.isCompleted).length ?? 0}{" "}
+          {t("of")} {task.subtasks?.length ?? 0} {t("completed")}
+        </p>
+      </div>
       <div className="flex items-center">
         <MdEdit
           onClick={() => onEdit(task.status, index!, task.title)}

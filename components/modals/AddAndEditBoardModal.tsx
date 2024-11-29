@@ -29,6 +29,16 @@ import { useFieldArray, useForm } from "react-hook-form";
 import { FaTimes } from "react-icons/fa";
 import * as z from "zod";
 
+enum ModalVariantEnum {
+  AddNewBoard = "Add New Board",
+  EditBoard = "Edit Board",
+}
+
+const modalVariantTranslations = {
+  [ModalVariantEnum.AddNewBoard]: "add_new_board",
+  [ModalVariantEnum.EditBoard]: "edit_board",
+};
+
 const BoardSchema = z.object({
   id: z.string().optional(),
   name: z.string().min(1, "Board name cannot be empty."),
@@ -48,8 +58,8 @@ type BoardFormValues = z.infer<typeof BoardSchema>;
 export default function AddAndEditBoardModal() {
   const dispatch = useAppDispatch();
   const isOpen = useAppSelector(getAddAndEditBoardModalValue);
-  const modalVariant = useAppSelector(getAddAndEditBoardModalVariantValue);
-  const isVariantAdd = modalVariant === "Add New Board";
+  const modalVariant = useAppSelector(getAddAndEditBoardModalVariantValue) as ModalVariantEnum;
+  const isVariantAdd = modalVariant === ModalVariantEnum.AddNewBoard;
   const activeBoardIndex = useAppSelector(getActiveBoardIndex);
   const t = useTranslations();
 
@@ -105,7 +115,9 @@ export default function AddAndEditBoardModal() {
   return (
     <Modal isOpen={isOpen} onRequestClose={closeModal}>
       <ModalBody>
-        <p className="font-bold text-lg">{modalVariant}</p>
+        <p className="font-bold text-lg">
+          {modalVariant.length > 0 && t(modalVariantTranslations[modalVariant])}
+        </p>
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}

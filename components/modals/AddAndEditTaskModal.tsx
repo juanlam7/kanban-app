@@ -31,6 +31,16 @@ import { useFieldArray, useForm } from "react-hook-form";
 import { FaTimes } from "react-icons/fa";
 import * as z from "zod";
 
+enum ModalVariantEnum {
+  AddNewTask = "Add New Task",
+  EditTask = "Edit Task",
+}
+
+const modalVariantTranslations = {
+  [ModalVariantEnum.AddNewTask]: "add_new_task",
+  [ModalVariantEnum.EditTask]: "edit_task",
+};
+
 const TaskSchema = z.object({
   id: z.string().optional(),
   title: z.string().min(1, "Task title cannot be empty."),
@@ -52,8 +62,10 @@ type TaskFormValues = z.infer<typeof TaskSchema>;
 export default function AddOrEditTaskModal() {
   const dispatch = useAppDispatch();
   const isModalOpen = useAppSelector(getAddAndEditTaskModalValue);
-  const modalVariant = useAppSelector(getAddAndEditTaskModalVariantValue);
-  const isVariantAdd = modalVariant === "Add New Task";
+  const modalVariant = useAppSelector(
+    getAddAndEditTaskModalVariantValue
+  ) as ModalVariantEnum;
+  const isVariantAdd = modalVariant === ModalVariantEnum.AddNewTask;
   const currentTaskTitle = useAppSelector(getAddAndEditTaskModalTitle);
   const activeBoardIndex = useAppSelector(getActiveBoardIndex);
   const currentBoardTitle = useAppSelector(getCurrentBoardName);
@@ -136,7 +148,9 @@ export default function AddOrEditTaskModal() {
   return (
     <Modal isOpen={isModalOpen} onRequestClose={closeModal}>
       <ModalBody>
-        <p className="font-bold text-lg">{modalVariant}</p>
+        <p className="font-bold text-lg">
+          {modalVariant.length > 0 && t(modalVariantTranslations[modalVariant])}
+        </p>
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}

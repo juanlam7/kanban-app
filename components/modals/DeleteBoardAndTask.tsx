@@ -15,16 +15,26 @@ import {
   useFetchDataFromDbQuery,
   useUpdateBoardToDbMutation,
 } from "@/redux/services/apiSlice";
+import { useTranslations } from "next-intl";
 import { Modal, ModalBody } from "../ui/Modal";
 import { Button } from "../ui/button";
-import { useTranslations } from "next-intl";
+
+enum ModalVariantEnum {
+  DeleteBoard = "Delete this board?",
+  DeleteTask = "Delete this task?",
+}
+
+const modalVariantTranslations = {
+  [ModalVariantEnum.DeleteBoard]: "delete_this_board",
+  [ModalVariantEnum.DeleteTask]: "delete_this_task",
+};
 
 export default function DeleteBoardOrTaskModal() {
   const dispatch = useAppDispatch();
   const isModalOpen = useAppSelector(getDeleteBoardAndTaskModalValue);
   const closeModal = () => dispatch(closeDeleteBoardAndTaskModal());
   const currentBoardName = useAppSelector(getCurrentBoardName);
-  const modalVariant = useAppSelector(getDeleteBoardAndTaskModalVariantValue);
+  const modalVariant = useAppSelector(getDeleteBoardAndTaskModalVariantValue) as ModalVariantEnum;
   const taskTitle = useAppSelector(getDeleteBoardAndTaskModalTitle);
   const taskIndex = useAppSelector(getDeleteBoardAndTaskModalIndex);
   const taskStatus = useAppSelector(getDeleteBoardAndTaskModalStatus);
@@ -70,7 +80,7 @@ export default function DeleteBoardOrTaskModal() {
   };
 
   const handleDelete = async () => {
-    if (modalVariant === "Delete this board?") {
+    if (modalVariant === ModalVariantEnum.DeleteBoard) {
       await handleDeleteBoard();
     } else {
       await handleDeleteTask();
@@ -80,7 +90,9 @@ export default function DeleteBoardOrTaskModal() {
   return (
     <Modal isOpen={isModalOpen} onRequestClose={closeModal}>
       <ModalBody>
-        <p className="text-red font-bold text-lg">{modalVariant}</p>
+        <p className="text-red font-bold text-lg">
+          {modalVariant.length > 0 && t(modalVariantTranslations[modalVariant])}
+        </p>
         <div className="pt-6">
           <p className="text-sm text-medium-grey leading-6">
             {modalVariant === "Delete this board?"
@@ -98,7 +110,7 @@ export default function DeleteBoardOrTaskModal() {
               onClick={handleDelete}
               className="rounded-3xl py-2 w-full text-sm font-bold"
             >
-              {isLoading ? `${t('loading')}...` : t('delete')}
+              {isLoading ? `${t("loading")}...` : t("delete")}
             </Button>
           </div>
           <div className="w-1/2">
@@ -107,7 +119,7 @@ export default function DeleteBoardOrTaskModal() {
               onClick={closeModal}
               className="rounded-3xl py-2 w-full text-sm font-bold"
             >
-              {t('cancel')}
+              {t("cancel")}
             </Button>
           </div>
         </div>
