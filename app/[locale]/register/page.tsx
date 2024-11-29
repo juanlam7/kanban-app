@@ -4,7 +4,7 @@ import FormPage from "./form";
 import AuthLayout from "@/components/ui/AuthLayout";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 
-type RouteParams = Promise<{ locale: string[] }>;
+type RouteParams = Promise<{ locale: string }>;
 
 export async function generateMetadata({ params }: { params: RouteParams }) {
   const { locale } = await params;
@@ -20,7 +20,7 @@ export async function generateMetadata({ params }: { params: RouteParams }) {
 
 export default async function RegisterPage({ params }: { params: RouteParams }) {
   const { locale } = await params;
-  setRequestLocale(locale[0]);
+  setRequestLocale(locale);
   const t = await getTranslations({
     locale,
     namespace: "RegisterPage",

@@ -2,7 +2,7 @@ import AuthLayout from "@/components/ui/AuthLayout";
 import WrapperForm from "./components/WrapperForm";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 
-type RouteParams = Promise<{ locale: string[] }>;
+type RouteParams = Promise<{ locale: string }>;
 
 export async function generateMetadata({ params }: { params: RouteParams }) {
   const { locale } = await params;
@@ -18,7 +18,7 @@ export async function generateMetadata({ params }: { params: RouteParams }) {
 
 export default async function LoginPage({ params }: { params: RouteParams }) {
   const { locale } = await params;
-  setRequestLocale(locale[0]);
+  setRequestLocale(locale);
   const t = await getTranslations({
     locale,
     namespace: "LoginPage",
