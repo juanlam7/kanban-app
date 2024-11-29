@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Modal, ModalBody } from "@/components/ui/Modal";
+import { TaskModalVariantEnum } from "@/lib/enums";
 import { addOrUpdateTaskToColumnImmutable, id } from "@/lib/utils";
 import {
   closeAddAndEditTaskModal,
@@ -31,14 +32,9 @@ import { useFieldArray, useForm } from "react-hook-form";
 import { FaTimes } from "react-icons/fa";
 import * as z from "zod";
 
-enum ModalVariantEnum {
-  AddNewTask = "Add New Task",
-  EditTask = "Edit Task",
-}
-
 const modalVariantTranslations = {
-  [ModalVariantEnum.AddNewTask]: "add_new_task",
-  [ModalVariantEnum.EditTask]: "edit_task",
+  [TaskModalVariantEnum.AddNewTask]: "add_new_task",
+  [TaskModalVariantEnum.EditTask]: "edit_task",
 };
 
 const TaskSchema = z.object({
@@ -64,8 +60,8 @@ export default function AddOrEditTaskModal() {
   const isModalOpen = useAppSelector(getAddAndEditTaskModalValue);
   const modalVariant = useAppSelector(
     getAddAndEditTaskModalVariantValue
-  ) as ModalVariantEnum;
-  const isVariantAdd = modalVariant === ModalVariantEnum.AddNewTask;
+  ) as TaskModalVariantEnum;
+  const isVariantAdd = modalVariant === TaskModalVariantEnum.AddNewTask;
   const currentTaskTitle = useAppSelector(getAddAndEditTaskModalTitle);
   const activeBoardIndex = useAppSelector(getActiveBoardIndex);
   const currentBoardTitle = useAppSelector(getCurrentBoardName);

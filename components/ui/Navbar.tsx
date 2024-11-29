@@ -1,5 +1,6 @@
 "use client";
 
+import { TaskModalVariantEnum } from "@/lib/enums";
 import {
   getCurrentBoardName,
   openAddAndEditTaskModal,
@@ -33,7 +34,11 @@ export default function Navbar() {
         <div className="flex items-center space-x-3">
           <Button
             onClick={() =>
-              dispatch(openAddAndEditTaskModal({ variant: "Add New Task" }))
+              dispatch(
+                openAddAndEditTaskModal({
+                  variant: TaskModalVariantEnum.AddNewTask,
+                })
+              )
             }
             className="px-4 py-2 flex items-center"
           >

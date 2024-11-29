@@ -1,11 +1,12 @@
+import { BoardModalVariantEnum, DeleteModalVariantEnum } from "@/lib/enums";
 import {
   openAddAndEditBoardModal,
   openDeleteBoardAndTaskModal,
 } from "@/redux/features/appSlice";
-import { Button } from "./button";
 import { useAppDispatch } from "@/redux/hooks";
-import { useEffect, useRef, useCallback } from "react";
 import { useTranslations } from "next-intl";
+import { useCallback, useEffect, useRef } from "react";
+import { Button } from "./button";
 
 interface IDropdown {
   show: boolean;
@@ -35,11 +36,15 @@ export default function Dropdown({ show, setShow }: IDropdown) {
   }, [handleClickOutside]);
 
   const openEditBoard = useCallback(() => {
-    dispatch(openAddAndEditBoardModal("Edit Board"));
+    dispatch(openAddAndEditBoardModal(BoardModalVariantEnum.EditBoard));
   }, [dispatch]);
 
   const openDeleteBoard = useCallback(() => {
-    dispatch(openDeleteBoardAndTaskModal({ variant: "Delete this board?" }));
+    dispatch(
+      openDeleteBoardAndTaskModal({
+        variant: DeleteModalVariantEnum.DeleteBoard,
+      })
+    );
   }, [dispatch]);
 
   if (!show) return null;

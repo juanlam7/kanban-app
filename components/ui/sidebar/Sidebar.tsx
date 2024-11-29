@@ -16,6 +16,7 @@ import iconShowSidebar from "../../../public/icon-show-sidebar.svg";
 import { Button } from "../button";
 import SidebarFooter from "./Footer";
 import { useTranslations } from "next-intl";
+import { BoardModalVariantEnum } from "@/lib/enums";
 
 export default function Sidebar() {
   const [showSidebar, setShowSidebar] = useState<boolean>(true);
@@ -98,7 +99,7 @@ export default function Sidebar() {
           </>
         )}
         <Button
-          onClick={() => dispatch(openAddAndEditBoardModal("Add New Board"))}
+          onClick={() => dispatch(openAddAndEditBoardModal(BoardModalVariantEnum.AddNewBoard))}
           variant="ghost"
           className="flex items-center space-x-2 pl-[2.12rem] py-3"
         >

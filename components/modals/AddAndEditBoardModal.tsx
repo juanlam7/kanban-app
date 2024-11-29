@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Modal, ModalBody } from "@/components/ui/Modal";
+import { BoardModalVariantEnum } from "@/lib/enums";
 import { id } from "@/lib/utils";
 import {
   closeAddAndEditBoardModal,
@@ -29,14 +30,9 @@ import { useFieldArray, useForm } from "react-hook-form";
 import { FaTimes } from "react-icons/fa";
 import * as z from "zod";
 
-enum ModalVariantEnum {
-  AddNewBoard = "Add New Board",
-  EditBoard = "Edit Board",
-}
-
 const modalVariantTranslations = {
-  [ModalVariantEnum.AddNewBoard]: "add_new_board",
-  [ModalVariantEnum.EditBoard]: "edit_board",
+  [BoardModalVariantEnum.AddNewBoard]: "add_new_board",
+  [BoardModalVariantEnum.EditBoard]: "edit_board",
 };
 
 const BoardSchema = z.object({
@@ -58,8 +54,10 @@ type BoardFormValues = z.infer<typeof BoardSchema>;
 export default function AddAndEditBoardModal() {
   const dispatch = useAppDispatch();
   const isOpen = useAppSelector(getAddAndEditBoardModalValue);
-  const modalVariant = useAppSelector(getAddAndEditBoardModalVariantValue) as ModalVariantEnum;
-  const isVariantAdd = modalVariant === ModalVariantEnum.AddNewBoard;
+  const modalVariant = useAppSelector(
+    getAddAndEditBoardModalVariantValue
+  ) as BoardModalVariantEnum;
+  const isVariantAdd = modalVariant === BoardModalVariantEnum.AddNewBoard;
   const activeBoardIndex = useAppSelector(getActiveBoardIndex);
   const t = useTranslations();
 

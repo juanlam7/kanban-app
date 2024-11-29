@@ -18,15 +18,11 @@ import {
 import { useTranslations } from "next-intl";
 import { Modal, ModalBody } from "../ui/Modal";
 import { Button } from "../ui/button";
-
-enum ModalVariantEnum {
-  DeleteBoard = "Delete this board?",
-  DeleteTask = "Delete this task?",
-}
+import { DeleteModalVariantEnum } from "@/lib/enums";
 
 const modalVariantTranslations = {
-  [ModalVariantEnum.DeleteBoard]: "delete_this_board",
-  [ModalVariantEnum.DeleteTask]: "delete_this_task",
+  [DeleteModalVariantEnum.DeleteBoard]: "delete_this_board",
+  [DeleteModalVariantEnum.DeleteTask]: "delete_this_task",
 };
 
 export default function DeleteBoardOrTaskModal() {
@@ -34,7 +30,7 @@ export default function DeleteBoardOrTaskModal() {
   const isModalOpen = useAppSelector(getDeleteBoardAndTaskModalValue);
   const closeModal = () => dispatch(closeDeleteBoardAndTaskModal());
   const currentBoardName = useAppSelector(getCurrentBoardName);
-  const modalVariant = useAppSelector(getDeleteBoardAndTaskModalVariantValue) as ModalVariantEnum;
+  const modalVariant = useAppSelector(getDeleteBoardAndTaskModalVariantValue) as DeleteModalVariantEnum;
   const taskTitle = useAppSelector(getDeleteBoardAndTaskModalTitle);
   const taskIndex = useAppSelector(getDeleteBoardAndTaskModalIndex);
   const taskStatus = useAppSelector(getDeleteBoardAndTaskModalStatus);
@@ -80,7 +76,7 @@ export default function DeleteBoardOrTaskModal() {
   };
 
   const handleDelete = async () => {
-    if (modalVariant === ModalVariantEnum.DeleteBoard) {
+    if (modalVariant === DeleteModalVariantEnum.DeleteBoard) {
       await handleDeleteBoard();
     } else {
       await handleDeleteTask();
@@ -95,7 +91,7 @@ export default function DeleteBoardOrTaskModal() {
         </p>
         <div className="pt-6">
           <p className="text-sm text-medium-grey leading-6">
-            {modalVariant === "Delete this board?"
+            {modalVariant === DeleteModalVariantEnum.DeleteBoard
               ? t("delete_board_confirmation", {
                   boardName: `"${currentBoardName}"`,
                 })

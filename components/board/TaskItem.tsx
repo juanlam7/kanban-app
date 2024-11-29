@@ -1,3 +1,4 @@
+import { DeleteModalVariantEnum, TaskModalVariantEnum } from "@/lib/enums";
 import { Task } from "@/lib/types";
 import {
   openAddAndEditTaskModal,
@@ -19,7 +20,7 @@ const TaskItem = ({ task, index }: TaskItemProps) => {
   const onEdit = (columnName: string, index: number, title: string) => {
     dispatch(
       openAddAndEditTaskModal({
-        variant: "Edit Task",
+        variant: TaskModalVariantEnum.EditTask,
         title,
         index,
         name: columnName,
@@ -30,7 +31,7 @@ const TaskItem = ({ task, index }: TaskItemProps) => {
   const onDelete = (index: number, title: string, status: string) => {
     dispatch(
       openDeleteBoardAndTaskModal({
-        variant: "Delete this task?",
+        variant: DeleteModalVariantEnum.DeleteTask,
         title,
         status,
         index,

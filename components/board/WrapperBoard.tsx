@@ -12,6 +12,7 @@ import BoardSectionList from "./BoardSectionList";
 import { Board } from "@/lib/types";
 import { Button } from "../ui/button";
 import { useTranslations } from "next-intl";
+import { BoardModalVariantEnum } from "@/lib/enums";
 
 const WrapperBoard = () => {
   const { data, isLoading } = useFetchDataFromDbQuery();
@@ -28,7 +29,7 @@ const WrapperBoard = () => {
   }, [data, currentBoardTitle]);
 
   const handleAddColumn = () => {
-    dispatch(openAddAndEditBoardModal("Edit Board"));
+    dispatch(openAddAndEditBoardModal(BoardModalVariantEnum.EditBoard));
   };
 
   return (
